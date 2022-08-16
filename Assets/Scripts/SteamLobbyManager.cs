@@ -67,7 +67,7 @@ public class SteamLobbyManager : MonoBehaviour
 
     }
 
-    private async void OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
+    private void OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
     {
         Debug.Log($"{_friend.Name} joined the lobby");
 
