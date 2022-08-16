@@ -79,6 +79,11 @@ public class SteamLobbyManager : MonoBehaviour
         Debug.Log($"{_friend.Name} left the lobby");
         Debug.Log($"New lobby owner is {currentLobby.Owner}");
 
+        if (currentLobby.Owner.Id == SteamClient.SteamId)
+        {
+            _lobby.SetData("Owner", SteamClient.Name);
+        }
+
         if (players.ContainsKey(_friend.Id))
         {
             Destroy(players[_friend.Id]);
@@ -239,7 +244,9 @@ public class SteamLobbyManager : MonoBehaviour
                 if (lobby.GetData(GameIdentifier) == "Tommetje")
                 {
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
-                    item.GetComponentInChildren<TextMeshProUGUI>().text = lobby.GetData("Owner");
+
+                    LobbyDataEntry lobbyEntry = item.GetComponent<LobbyDataEntry>();
+                    lobbyEntry.SetLobbyData(lobby);
 
                     lobbyItems.Add(item);
                 }

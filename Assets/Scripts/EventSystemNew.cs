@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum Event_Type
 {
-    UpdateGlobalHealth
+    SetCurrentLobby
 }
 
 public static class EventSystemNew
