@@ -81,7 +81,11 @@ public class SteamLobbyManager : MonoBehaviour
 
         if (currentLobby.Owner.Id == SteamClient.SteamId)
         {
+            OnLobbyCreated?.Invoke();
+
             _lobby.SetData("Owner", SteamClient.Name);
+
+            isHost = true;
         }
 
         if (players.ContainsKey(_friend.Id))
@@ -208,6 +212,15 @@ public class SteamLobbyManager : MonoBehaviour
     {
         try
         {
+            if (isHost)
+            {
+                InstanceFinder.ServerManager.StopConnection(false);
+
+                isHost = false;
+            }
+
+            InstanceFinder.ClientManager.StopConnection();
+
             inLobby = false;
 
             currentLobby.Leave();
