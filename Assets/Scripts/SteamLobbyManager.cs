@@ -127,7 +127,7 @@ public class SteamLobbyManager : MonoBehaviour
             OnLobbyCreated?.Invoke();
 
             _lobby.SetData(HostAddressKey, SteamClient.SteamId.ToString());
-            _lobby.SetData(GameIdentifier, "Tommetje");
+            _lobby.SetData(GameIdentifier, "Tommetje1");
             _lobby.SetData("Owner", SteamClient.Name);
 
             InstanceFinder.ServerManager.StartConnection();
