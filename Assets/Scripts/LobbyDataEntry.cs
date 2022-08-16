@@ -8,13 +8,16 @@ using Steamworks.Data;
 
 public class LobbyDataEntry : MonoBehaviour
 {
+    [SerializeField] private RawImage profilePicture;
+
     [SerializeField] private TextMeshProUGUI lobbyNameText;
 
     private Lobby lobby;
 
-    public void SetLobbyData(Lobby _lobby)
+    public void SetLobbyData(Lobby _lobby, Texture2D _profilePicture)
     {
         lobby = _lobby;
+        profilePicture.texture = _profilePicture;
 
         if (_lobby.GetData("Owner") == string.Empty)
         {

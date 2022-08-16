@@ -257,9 +257,10 @@ public class SteamLobbyManager : MonoBehaviour
                 if (lobby.GetData(GameIdentifier) == "Tommetje1")
                 {
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
+                    var img = await SteamFriends.GetLargeAvatarAsync(lobby.Owner.Id);
 
                     LobbyDataEntry lobbyEntry = item.GetComponent<LobbyDataEntry>();
-                    lobbyEntry.SetLobbyData(lobby);
+                    lobbyEntry.SetLobbyData(lobby, SteamFriendsManager.GetTextureFromImage(img.Value));
 
                     lobbyItems.Add(item);
                 }

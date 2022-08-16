@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 1, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -47,21 +48,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: -1
-  _scenePathHash: 0
-  <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 3497017249459554977
-  _sceneNetworkObjects: []
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
-  ObjectId: 0
-  _networkBehaviours: []
+  _networkBehaviours:
+  - {fileID: 2759061792589502182}
+  - {fileID: 1348621277}
+  - {fileID: 1348621278}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
   _disableOnDespawn: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: 2
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 17392677648481844723
+  _sceneNetworkObjects: []
 --- !u!114 &2759061792589502182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,9 +77,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d3558aad46c24549bea48d0e3938264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8475222101369129519}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8475222101369129519}
   _hitboxLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -95,9 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d656f377f37164d8d7431aa4e43cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8475222101369129519}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8475222101369129519}
 --- !u!114 &1348621278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,9 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c718ab30626bbd648952910f74780a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8475222101369129519}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8475222101369129519}
   _moveRate: 3
 --- !u!143 &5081159371976248031
 CharacterController:
