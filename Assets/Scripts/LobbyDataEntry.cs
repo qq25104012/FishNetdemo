@@ -11,7 +11,6 @@ public class LobbyDataEntry : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lobbyNameText;
 
     private Lobby lobby;
-    private string lobbyName;
 
     public void SetLobbyData(Lobby _lobby)
     {

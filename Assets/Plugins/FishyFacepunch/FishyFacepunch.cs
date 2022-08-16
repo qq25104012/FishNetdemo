@@ -100,6 +100,8 @@ namespace FishyFacepunch
 
         private void OnDestroy()
         {
+            SteamClient.Shutdown();
+
             Shutdown();
         }
 
