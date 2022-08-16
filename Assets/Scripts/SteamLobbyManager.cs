@@ -254,7 +254,7 @@ public class SteamLobbyManager : MonoBehaviour
         {
             foreach (var lobby in lobbies)
             {
-                if (lobby.GetData(GameIdentifier) == "Tommetje")
+                if (lobby.GetData(GameIdentifier) == "Tommetje1")
                 {
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
 
