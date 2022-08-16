@@ -71,9 +71,7 @@ public class SteamLobbyManager : MonoBehaviour
     {
         Debug.Log($"{_friend.Name} joined the lobby");
 
-        GameObject friendItem = Instantiate(playerItem, playerContent);
-        var img = await SteamFriends.GetLargeAvatarAsync(_friend.Id);
-        friendItem.GetComponent<FriendItem>().Setup(SteamFriendsManager.GetTextureFromImage(img.Value), _friend.Name, _friend.Id);
+        CreatePlayerItem(_friend.Id, _friend.Name);
     }
 
     private void OnLobbyMemberDisconnected(Lobby _lobby, Friend _friend)
@@ -121,6 +119,7 @@ public class SteamLobbyManager : MonoBehaviour
 
             _lobby.SetData(HostAddressKey, SteamClient.SteamId.ToString());
             _lobby.SetData(GameIdentifier, "Tommetje");
+            _lobby.SetData("Owner", SteamClient.Name);
 
             InstanceFinder.ServerManager.StartConnection();
             InstanceFinder.ClientManager.StartConnection();
@@ -240,7 +239,7 @@ public class SteamLobbyManager : MonoBehaviour
                 if (lobby.GetData(GameIdentifier) == "Tommetje")
                 {
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
-                    item.GetComponentInChildren<TextMeshProUGUI>().text = lobby.Owner.Name;
+                    item.GetComponentInChildren<TextMeshProUGUI>().text = lobby.GetData("Owner");
 
                     lobbyItems.Add(item);
                 }
@@ -250,8 +249,6 @@ public class SteamLobbyManager : MonoBehaviour
 
     private async void CreatePlayerItem(SteamId _steamId, string _name)
     {
-        Debug.Log("SteamID: " + _steamId);
-
         GameObject item = Instantiate(playerItem, playerContent);
         var img = await SteamFriends.GetLargeAvatarAsync(_steamId);
         item.GetComponent<FriendItem>().Setup(SteamFriendsManager.GetTextureFromImage(img.Value), _name, _steamId);
