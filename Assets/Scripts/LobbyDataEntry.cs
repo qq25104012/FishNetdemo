@@ -12,12 +12,15 @@ public class LobbyDataEntry : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI lobbyNameText;
 
+    [SerializeField] private TextMeshProUGUI playerCountText;
+
     private Lobby lobby;
 
     public void SetLobbyData(Lobby _lobby, Texture2D _profilePicture)
     {
         lobby = _lobby;
         profilePicture.texture = _profilePicture;
+        playerCountText.text = _lobby.MemberCount + "/" + _lobby.MaxMembers;
 
         if (_lobby.GetData("Owner") == string.Empty)
         {
@@ -31,15 +34,18 @@ public class LobbyDataEntry : MonoBehaviour
 
     public async void JoinLobby()
     {
-        RoomEnter joinedLobbySuccessfuly = await lobby.Join();
+        if (!SteamLobbyManager.inLobby)
+        {
+            RoomEnter joinedLobbySuccessfuly = await lobby.Join();
 
-        if (joinedLobbySuccessfuly != RoomEnter.Success)
-        {
-            Debug.Log("failed to join lobby : " + joinedLobbySuccessfuly);
-        }
-        else
-        {
-            SteamLobbyManager.currentLobby = lobby;
+            if (joinedLobbySuccessfuly != RoomEnter.Success)
+            {
+                Debug.Log("failed to join lobby : " + joinedLobbySuccessfuly);
+            }
+            else
+            {
+                SteamLobbyManager.currentLobby = lobby;
+            }
         }
     }
 }
