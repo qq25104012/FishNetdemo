@@ -84,6 +84,7 @@ public class SteamLobbyManager : MonoBehaviour
             OnLobbyCreated?.Invoke();
 
             _lobby.SetData("Owner", SteamClient.Name);
+            _lobby.SetData("SteamID", SteamClient.SteamId.ToString());
 
             isHost = true;
         }
@@ -129,6 +130,7 @@ public class SteamLobbyManager : MonoBehaviour
             _lobby.SetData(HostAddressKey, SteamClient.SteamId.ToString());
             _lobby.SetData(GameIdentifier, "Tommetje1");
             _lobby.SetData("Owner", SteamClient.Name);
+            _lobby.SetData("SteamID", SteamClient.SteamId.ToString());
 
             InstanceFinder.ServerManager.StartConnection();
             InstanceFinder.ClientManager.StartConnection();
@@ -257,7 +259,7 @@ public class SteamLobbyManager : MonoBehaviour
                 if (lobby.GetData(GameIdentifier) == "Tommetje1")
                 {
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
-                    var img = await SteamFriends.GetLargeAvatarAsync(lobby.Owner.Id);
+                    var img = await SteamFriends.GetLargeAvatarAsync(ulong.Parse(lobby.GetData("SteamID")));
 
                     LobbyDataEntry lobbyEntry = item.GetComponent<LobbyDataEntry>();
                     lobbyEntry.SetLobbyData(lobby, SteamFriendsManager.GetTextureFromImage(img.Value));
