@@ -4,6 +4,7 @@ using FishNet.Transporting;
 using Steamworks;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FishyFacepunch
 {
@@ -82,6 +83,8 @@ namespace FishyFacepunch
         internal const int CLIENT_HOST_ID = short.MaxValue;
         #endregion
 
+        [SerializeField] private UnityEvent OnInitializeFailed;
+
         #region Initialization and Unity.
         public override void Initialize(NetworkManager networkManager, int transportIndex)
         {
@@ -90,8 +93,18 @@ namespace FishyFacepunch
             CreateChannelData();
 
 #if !UNITY_SERVER
-            SteamClient.Init(_steamAppID, true);
-            SteamNetworking.AllowP2PPacketRelay(true);
+            try
+            {
+                SteamClient.Init(_steamAppID, true);
+                SteamNetworking.AllowP2PPacketRelay(true);
+            }
+            catch
+            {
+                OnInitializeFailed?.Invoke();
+                Debug.Log("Failed to Load Steam Data");
+
+                return;
+            }
 #endif
             _clientHost.Initialize(this);
             _client.Initialize(this);

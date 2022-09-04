@@ -7,6 +7,7 @@ using FishNet.Object;
 public class DisableComponents : NetworkBehaviour
 {
     [SerializeField] private GameObject[] objectsToDisableForOthers;
+    [SerializeField] private Component[] componentsToDisableForOthers;
 
     public override void OnStartClient()
     {
@@ -17,6 +18,11 @@ public class DisableComponents : NetworkBehaviour
             foreach (var item in objectsToDisableForOthers)
             {
                 item.SetActive(false);
+            }
+
+            foreach (var item in componentsToDisableForOthers)
+            {
+                Destroy(item);
             }
 
             enabled = false;

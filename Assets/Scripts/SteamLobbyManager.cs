@@ -19,6 +19,8 @@ public class SteamLobbyManager : MonoBehaviour
     [SerializeField] private UnityEvent OnLobbyJoined;
     [SerializeField] private UnityEvent OnLobbyLeave;
 
+    [SerializeField] private UnityEvent NoLobbiesAvailable;
+
     [SerializeField] private GameObject playerItem;
     [SerializeField] private Transform playerContent;
 
@@ -36,8 +38,6 @@ public class SteamLobbyManager : MonoBehaviour
 
     private void Start()
     {
-        //DontDestroyOnLoad(this);
-
         SteamMatchmaking.OnLobbyCreated += OnLobbyCreatedCallback;
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
         SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
@@ -252,12 +252,16 @@ public class SteamLobbyManager : MonoBehaviour
 
         Lobby[] lobbies = await SteamMatchmaking.LobbyList.RequestAsync();
 
+        int lobbyCount = 0;
+
         if (lobbies.Length > 0)
         {
             foreach (var lobby in lobbies)
             {
                 if (lobby.GetData(GameIdentifier) == "Tommetje1")
                 {
+                    lobbyCount++;
+
                     GameObject item = Instantiate(lobbyItem, lobbyContent);
                     var img = await SteamFriends.GetLargeAvatarAsync(ulong.Parse(lobby.GetData("SteamID")));
 
@@ -267,6 +271,15 @@ public class SteamLobbyManager : MonoBehaviour
                     lobbyItems.Add(item);
                 }
             }
+
+            if (lobbyCount == 0)
+            {
+                NoLobbiesAvailable?.Invoke();
+            }
+        }
+        else
+        {
+            NoLobbiesAvailable?.Invoke();
         }
     }
 

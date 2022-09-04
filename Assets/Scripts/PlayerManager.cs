@@ -30,12 +30,6 @@ public class PlayerManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-
-        if (!IsOwner)
-        {
-            Destroy(playerCamera);
-            enabled = false;
-        }
     }
 
     void Start()
