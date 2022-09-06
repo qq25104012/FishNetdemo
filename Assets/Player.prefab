@@ -152,7 +152,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 9117857247562382210}
   _networkObjectCache: {fileID: 9117857247562382210}
   _moveRate: 5
-  _smoothInputSpeed: 0.0075
+  _smoothInputSpeed: 0.015
   _characterController: {fileID: 9144896207351220583}
 --- !u!114 &9117857247562382210
 MonoBehaviour:
