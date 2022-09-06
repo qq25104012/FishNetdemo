@@ -51,6 +51,8 @@ namespace FishNet.Example.Prediction.CharacterControllers
         {
             base.OnStartClient();
             _characterController.enabled = (base.IsServer || base.IsOwner);
+
+            Debug.Log("IsOwner: " + base.IsOwner);
         }
 
         private void OnDestroy()
