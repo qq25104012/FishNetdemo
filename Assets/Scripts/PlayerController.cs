@@ -10,10 +10,12 @@ namespace FishNet.Example.Prediction.CharacterControllers
     public class PlayerController : NetworkBehaviour
     {
         #region Types.
-        public struct MoveData
+        public struct ControllerData
         {
             public float Horizontal;
             public float Vertical;
+            public float RHorizontal;
+            public float RVertical;
         }
         public struct ReconcileData
         {
@@ -28,31 +30,50 @@ namespace FishNet.Example.Prediction.CharacterControllers
         #endregion
 
         #region Serialized.
+        [Header("Player Move")]
         [SerializeField]
         private float _moveRate = 5f;
         [SerializeField]
         private float _smoothInputSpeed = 0.2f;
         [SerializeField]
         private CharacterController _characterController;
+        [SerializeField]
+        private PlayerInput input;
+
+        [Header("Player Look")]
+        [SerializeField]
+        Transform cameraHolder;
+        [SerializeField]
+        Transform playerTransform;
+        [SerializeField]
+        float minXLook;
+        [SerializeField]
+        float maxXLook;
+        [SerializeField]
+        float lookSensitivity;
         #endregion
 
         #region Private.
         private Vector2 curMovementInput = Vector2.zero;
         private Vector2 smoothInputVelocity = Vector2.zero;
+        private float curCamRotX;
+        private Vector2 mouseDelta;
         private bool isMoving = false;
         #endregion
 
         private void Awake()
         {
             InstanceFinder.TimeManager.OnTick += TimeManager_OnTick;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public override void OnStartClient()
         {
             base.OnStartClient();
             _characterController.enabled = (base.IsServer || base.IsOwner);
-
-            Debug.Log("IsOwner: " + base.IsOwner);
+            input.enabled = (base.IsOwner);
         }
 
         private void OnDestroy()
@@ -68,7 +89,7 @@ namespace FishNet.Example.Prediction.CharacterControllers
             if (base.IsOwner)
             {
                 Reconciliation(default, false);
-                CheckInput(out MoveData md);
+                CheckInput(out ControllerData md);
                 Move(md, false);
             }
             if (base.IsServer)
@@ -92,28 +113,37 @@ namespace FishNet.Example.Prediction.CharacterControllers
             }
         }
 
-        private void CheckInput(out MoveData md)
+        private void CheckInput(out ControllerData md)
         {
             md = default;
 
-            //float horizontal = Input.GetAxisRaw("Horizontal");
-            //float vertical = Input.GetAxisRaw("Vertical");
+            //if (curMovementInput == Vector2.zero)
+            //    return;
 
-            if (curMovementInput == Vector2.zero)
-                return;
-
-            md = new MoveData()
+            md = new ControllerData()
             {
                 Horizontal = curMovementInput.x,
-                Vertical = curMovementInput.y
+                Vertical = curMovementInput.y,
+
+                RHorizontal = mouseDelta.x,
+                RVertical = mouseDelta.y
             };
         }
 
         [Replicate]
-        private void Move(MoveData md, bool asServer, bool replaying = false)
+        private void Move(ControllerData md, bool asServer, bool replaying = false)
         {
-            Vector3 move = new Vector3(md.Horizontal, 0f, md.Vertical).normalized + new Vector3(0f, Physics.gravity.y, 0f);
+            // Move
+            Vector3 move = (transform.forward * md.Vertical + transform.right * md.Horizontal).normalized;
+            move.y = Physics.gravity.y;
             _characterController.Move(move * _moveRate * (float)base.TimeManager.TickDelta);
+
+            // Rotate
+            curCamRotX += md.RVertical * lookSensitivity;
+            curCamRotX = Mathf.Clamp(curCamRotX, minXLook, maxXLook);
+            cameraHolder.localEulerAngles = new Vector3(-curCamRotX, 0, 0);
+
+            playerTransform.eulerAngles += new Vector3(0, md.RHorizontal * lookSensitivity, 0);
         }
 
         [Reconcile]
@@ -138,6 +168,11 @@ namespace FishNet.Example.Prediction.CharacterControllers
                     isMoving = false;
                 }
             }
+        }
+
+        public void OnLookInput(InputAction.CallbackContext context)
+        {
+            mouseDelta = context.ReadValue<Vector2>();
         }
     }
 }

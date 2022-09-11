@@ -60,7 +60,7 @@ MonoBehaviour:
   _isGlobal: 0
   _disableOnDespawn: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 2
+  <PrefabId>k__BackingField: 8
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17392677648481844723

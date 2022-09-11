@@ -9,6 +9,8 @@ public class DisableComponents : NetworkBehaviour
     [SerializeField] private GameObject[] objectsToDisableForOthers;
     [SerializeField] private Component[] componentsToDisableForOthers;
 
+    [SerializeField] private GameObject[] objectsToDisableForOwn;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -26,6 +28,13 @@ public class DisableComponents : NetworkBehaviour
             }
 
             enabled = false;
+        }
+        else
+        {
+            foreach (var item in objectsToDisableForOwn)
+            {
+                item.SetActive(false);
+            }
         }
     }
 }
