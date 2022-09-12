@@ -17,14 +17,22 @@ namespace FishNet.Example.Prediction.CharacterControllers
             public float RHorizontal;
             public float RVertical;
         }
+        //public struct ReconcileData
+        //{
+        //    public Vector3 Position;
+        //    public Quaternion Rotation;
+        //    public ReconcileData(Vector3 position, Quaternion rotation)
+        //    {
+        //        Position = position;
+        //        Rotation = rotation;
+        //    }
+        //}
         public struct ReconcileData
         {
             public Vector3 Position;
-            public Quaternion Rotation;
-            public ReconcileData(Vector3 position, Quaternion rotation)
+            public ReconcileData(Vector3 position)
             {
                 Position = position;
-                Rotation = rotation;
             }
         }
         #endregion
@@ -95,8 +103,21 @@ namespace FishNet.Example.Prediction.CharacterControllers
             if (base.IsServer)
             {
                 Move(default, true);
-                ReconcileData rd = new ReconcileData(transform.position, transform.rotation);
+                //ReconcileData rd = new ReconcileData(transform.position, transform.rotation);
+                ReconcileData rd = new ReconcileData(transform.position);
                 Reconciliation(rd, true);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (base.IsOwner)
+            {
+                curCamRotX += mouseDelta.y * lookSensitivity;
+                curCamRotX = Mathf.Clamp(curCamRotX, minXLook, maxXLook);
+                cameraHolder.localEulerAngles = new Vector3(-curCamRotX, 0, 0);
+
+                playerTransform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
             }
         }
 
@@ -139,18 +160,18 @@ namespace FishNet.Example.Prediction.CharacterControllers
             _characterController.Move(move * _moveRate * (float)base.TimeManager.TickDelta);
 
             // Rotate
-            curCamRotX += md.RVertical * lookSensitivity;
-            curCamRotX = Mathf.Clamp(curCamRotX, minXLook, maxXLook);
-            cameraHolder.localEulerAngles = new Vector3(-curCamRotX, 0, 0);
+            //curCamRotX += md.RVertical * lookSensitivity;
+            //curCamRotX = Mathf.Clamp(curCamRotX, minXLook, maxXLook);
+            //cameraHolder.localEulerAngles = new Vector3(-curCamRotX, 0, 0);
 
-            playerTransform.eulerAngles += new Vector3(0, md.RHorizontal * lookSensitivity, 0);
+            //playerTransform.eulerAngles += new Vector3(0, md.RHorizontal * lookSensitivity, 0);
         }
 
         [Reconcile]
         private void Reconciliation(ReconcileData rd, bool asServer)
         {
             transform.position = rd.Position;
-            transform.rotation = rd.Rotation;
+            //transform.rotation = rd.Rotation;
         }
 
         // Inputs
