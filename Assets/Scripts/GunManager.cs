@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object;
 
-public class Gun : NetworkBehaviour
+public class GunManager : NetworkBehaviour
 {
     [SerializeField] private GameObject bullet;
 
@@ -13,7 +13,7 @@ public class Gun : NetworkBehaviour
 
     [SerializeField] private float damage = 10f;
 
-    bool canShoot = true;
+    private bool canShoot = true;
 
     private void Update()
     {

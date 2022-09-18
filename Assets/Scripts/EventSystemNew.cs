@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum Event_Type
 {
-    SetCurrentLobby
+    PlayerDied
 }
 
 public static class EventSystemNew
