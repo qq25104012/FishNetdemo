@@ -19,21 +19,11 @@ namespace FishNet.Example.Prediction.CharacterControllers
         public struct ReconcileData
         {
             public Vector3 Position;
-            public Quaternion Rotation;
-            public ReconcileData(Vector3 position, Quaternion rotation)
+            public ReconcileData(Vector3 position)
             {
                 Position = position;
-                Rotation = rotation;
             }
         }
-        //public struct ReconcileData
-        //{
-        //    public Vector3 Position;
-        //    public ReconcileData(Vector3 position)
-        //    {
-        //        Position = position;
-        //    }
-        //}
         #endregion
 
         #region Serialized.
@@ -102,7 +92,7 @@ namespace FishNet.Example.Prediction.CharacterControllers
             if (base.IsServer)
             {
                 Move(default, true);
-                ReconcileData rd = new ReconcileData(transform.position, transform.rotation);
+                ReconcileData rd = new ReconcileData(transform.position);
                 Reconciliation(rd, true);
             }
         }
@@ -126,8 +116,6 @@ namespace FishNet.Example.Prediction.CharacterControllers
                 if (!isMoving)
                 {
                     curMovementInput = Vector2.SmoothDamp(curMovementInput, Vector2.zero, ref smoothInputVelocity, _smoothInputSpeed);
-
-                    Debug.Log("Input: " + curMovementInput);
                 }
             }
         }
@@ -157,19 +145,12 @@ namespace FishNet.Example.Prediction.CharacterControllers
 
             if (!base.IsOwner)
                 transform.rotation = md.Rotation;
-            // Rotate
-            //curCamRotX += md.RVertical * lookSensitivity;
-            //curCamRotX = Mathf.Clamp(curCamRotX, minXLook, maxXLook);
-            //cameraHolder.localEulerAngles = new Vector3(-curCamRotX, 0, 0);
-
-            //playerTransform.eulerAngles += new Vector3(0, md.RHorizontal * lookSensitivity, 0);
         }
 
         [Reconcile]
         private void Reconciliation(ReconcileData rd, bool asServer)
         {
             transform.position = rd.Position;
-            //transform.rotation = rd.Rotation;
         }
 
         // Inputs

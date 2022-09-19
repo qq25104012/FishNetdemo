@@ -4,7 +4,9 @@ using UnityEngine;
 
 public enum Event_Type
 {
-    PlayerDied
+    Player_Died,
+    Player_Respawned,
+    Respawn_Player
 }
 
 public static class EventSystemNew

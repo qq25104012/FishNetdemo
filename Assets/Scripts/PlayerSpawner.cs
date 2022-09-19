@@ -4,6 +4,7 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Connection;
 using FishNet.Object.Synchronizing;
+using FishNet.Managing.Scened;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -11,19 +12,17 @@ public class PlayerSpawner : NetworkBehaviour
     public GameObject spawnedObject;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject deadHUD;
-    [SerializeField] private GameObject deathCam;
 
     [SerializeField] private bool spawnOnStart = false;
 
     private void OnEnable()
     {
-        EventSystemNew<NetworkConnection>.Subscribe(Event_Type.PlayerDied, PlayerDied);
+        EventSystemNew.Subscribe(Event_Type.Respawn_Player, RespawnPlayer);
     }
 
     private void OnDisable()
     {
-        EventSystemNew<NetworkConnection>.Unsubscribe(Event_Type.PlayerDied, PlayerDied);
+        EventSystemNew.Unsubscribe(Event_Type.Respawn_Player, RespawnPlayer);
     }
 
     public override void OnStartClient()
@@ -36,12 +35,15 @@ public class PlayerSpawner : NetworkBehaviour
         {
             SpawnPlayer();
         }
+    }
 
-        if (!IsOwner)
-        {
-            Destroy(deadHUD);
-            Destroy(deathCam);
-        }
+    public void RespawnPlayer()
+    {
+        if (spawnedObject != null) return;
+
+        EventSystemNew.RaiseEvent(Event_Type.Player_Respawned);
+
+        SpawnPlayer();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -52,30 +54,5 @@ public class PlayerSpawner : NetworkBehaviour
         Spawn(go, _client);
 
         spawnedObject = go;
-    }
-
-    public void RespawnPlayer()
-    {
-        if (spawnedObject != null) return;
-
-        deadHUD.SetActive(false);
-        deathCam.SetActive(false);
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        SpawnPlayer();
-    }
-
-    private void PlayerDied(NetworkConnection connection)
-    {
-        if (IsOwner)
-        {
-            deadHUD.SetActive(true);
-            deathCam.SetActive(true);
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
     }
 }

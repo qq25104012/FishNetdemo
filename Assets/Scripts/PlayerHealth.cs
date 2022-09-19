@@ -47,6 +47,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     [TargetRpc]
     private void RPC_PlayerDied(NetworkConnection conn)
     {
-        EventSystemNew<NetworkConnection>.RaiseEvent(Event_Type.PlayerDied, conn);
+        EventSystemNew.RaiseEvent(Event_Type.Player_Died);
     }
 }
