@@ -57,10 +57,10 @@ MonoBehaviour:
   _isGlobal: 0
   _disableOnDespawn: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: -1
+  <PrefabId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 8745954295863641493
+  <AssetPathHash>k__BackingField: 13587879312642905993
   _sceneNetworkObjects:
   - {fileID: 6785665783551630983}
   - {fileID: 0}
@@ -82,9 +82,8 @@ MonoBehaviour:
   spawnedObject: {fileID: 0}
   playerPrefab: {fileID: 9117857247562382221, guid: ba2e237e87f7f514b9ca58245c66723a,
     type: 3}
-  deadHUD: {fileID: 6785665784563640272}
-  deathCam: {fileID: 6785665784383681010}
   spawnOnStart: 1
+  spawnWithOwnership: 1
 --- !u!1 &6785665783562722338
 GameObject:
   m_ObjectHideFlags: 0

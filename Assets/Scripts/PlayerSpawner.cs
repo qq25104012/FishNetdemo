@@ -14,6 +14,7 @@ public class PlayerSpawner : NetworkBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private bool spawnOnStart = false;
+    [SerializeField] private bool spawnWithOwnership = true;
 
     private void OnEnable()
     {
@@ -25,13 +26,22 @@ public class PlayerSpawner : NetworkBehaviour
         EventSystemNew.Unsubscribe(Event_Type.Respawn_Player, RespawnPlayer);
     }
 
+    //public override void OnStartNetwork()
+    //{
+    //    base.OnStartNetwork();
+
+    //    SceneManager.AddOwnerToDefaultScene(NetworkObject);
+    //}
+
     public override void OnStartClient()
     {
         base.OnStartClient();
 
-        Debug.Log("Is Owner: " + IsOwner);
-
-        if (spawnOnStart && IsOwner)
+        if (spawnOnStart && !spawnWithOwnership)
+        {
+            SpawnPlayer();
+        }
+        else if (spawnOnStart && spawnWithOwnership && IsOwner)
         {
             SpawnPlayer();
         }
