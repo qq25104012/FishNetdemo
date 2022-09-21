@@ -811,6 +811,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 9117857247562382210}
   _moveRate: 5
   _smoothInputSpeed: 0.015
+  jumpHeight: 1
   _characterController: {fileID: 9144896207351220583}
   input: {fileID: -8109533569381916377}
   cameraHolder: {fileID: 1583007676307647624}
@@ -845,7 +846,7 @@ MonoBehaviour:
   _isGlobal: 0
   _disableOnDespawn: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 1
+  <PrefabId>k__BackingField: 0
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7807759643866311769
@@ -981,7 +982,20 @@ MonoBehaviour:
     m_ActionId: 85442356-0575-40e4-a3f1-5c9616a6672f
     m_ActionName: PlayerControls/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/DualShock4GamepadHID/leftStick]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -7450950589511683050}
+        m_TargetAssemblyTypeName: FishNet.Example.Prediction.CharacterControllers.PlayerController,
+          Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: be001daf-97ec-461c-9de6-0399f9ca6fd1
     m_ActionName: PlayerControls/Jump[/Keyboard/space,/DualShock4GamepadHID/buttonSouth]
   - m_PersistentCalls:

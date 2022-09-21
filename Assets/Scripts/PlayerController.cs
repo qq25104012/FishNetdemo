@@ -15,6 +15,7 @@ namespace FishNet.Example.Prediction.CharacterControllers
             public float Horizontal;
             public float Vertical;
             public Quaternion Rotation;
+            public bool jump;
         }
         public struct ReconcileData
         {
@@ -29,9 +30,13 @@ namespace FishNet.Example.Prediction.CharacterControllers
         #region Serialized.
         [Header("Player Move")]
         [SerializeField]
+        private float gravity = -9.81f;
+        [SerializeField]
         private float _moveRate = 5f;
         [SerializeField]
         private float _smoothInputSpeed = 0.2f;
+        [SerializeField]
+        private float jumpHeight = 2f;
         [SerializeField]
         private CharacterController _characterController;
         [SerializeField]
@@ -56,10 +61,15 @@ namespace FishNet.Example.Prediction.CharacterControllers
         private float curCamRotX;
         private Vector2 mouseDelta;
         private bool isMoving = false;
+        private bool jumpQueued = false;
+        public Vector3 velocity = Vector3.zero;
+        private float distanceToGround;
         #endregion
 
         private void Awake()
         {
+            distanceToGround = _characterController.bounds.extents.y;
+
             InstanceFinder.TimeManager.OnTick += TimeManager_OnTick;
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -132,16 +142,31 @@ namespace FishNet.Example.Prediction.CharacterControllers
                 Horizontal = curMovementInput.x,
                 Vertical = curMovementInput.y,
                 Rotation = transform.rotation,
+                jump = jumpQueued,
             };
+
+            jumpQueued = false;
         }
 
         [Replicate]
         private void Move(MoveData md, bool asServer, bool replaying = false)
         {
+            if (_characterController.isGrounded && velocity.y < 0)
+            {
+                velocity.y = 0f;
+            }
+
             // Move
             Vector3 move = (transform.forward * md.Vertical + transform.right * md.Horizontal).normalized;
-            move.y = Physics.gravity.y;
             _characterController.Move(move * _moveRate * (float)base.TimeManager.TickDelta);
+
+            if (md.jump && IsGrounded())
+            {
+                velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+            }
+
+            velocity.y += gravity * (float)base.TimeManager.TickDelta;
+            _characterController.Move(velocity * (float)base.TimeManager.TickDelta);
 
             if (!base.IsOwner)
                 transform.rotation = md.Rotation;
@@ -170,9 +195,22 @@ namespace FishNet.Example.Prediction.CharacterControllers
             }
         }
 
-        public void OnLookInput(InputAction.CallbackContext context)
+        public void OnLookInput(InputAction.CallbackContext _context)
         {
-            mouseDelta = context.ReadValue<Vector2>();
+            mouseDelta = _context.ReadValue<Vector2>();
+        }
+
+        public void OnJumpInput(InputAction.CallbackContext _context)
+        {
+            if (_context.phase == InputActionPhase.Started)
+            {
+                jumpQueued = true;
+            }
+        }
+
+        private bool IsGrounded()
+        {
+            return Physics.Raycast(transform.position, -Vector3.up, distanceToGround + 0.1f);
         }
     }
 }
