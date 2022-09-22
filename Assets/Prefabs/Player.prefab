@@ -486,6 +486,37 @@ Transform:
   m_Father: {fileID: 8274935638305073705}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2968875564188385279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4436932899182608027}
+  m_Layer: 0
+  m_Name: Cos1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4436932899182608027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2968875564188385279}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 346.92633, y: 176.33296, z: 19.758032}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9117857247562382215}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3113073977617949633
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +666,68 @@ Transform:
   m_Father: {fileID: 8274935638305073705}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5227228114914271230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8154295895941638773}
+  m_Layer: 0
+  m_Name: Cos1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8154295895941638773
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5227228114914271230}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 346.92633, y: 176.33296, z: 19.758032}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9117857247562382215}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5897528077697835201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4618040187904352724}
+  m_Layer: 0
+  m_Name: Cos1 (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4618040187904352724
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897528077697835201}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 346.92633, y: 176.33296, z: 19.758032}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9117857247562382215}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8525768564311616898
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +849,7 @@ GameObject:
   - component: {fileID: -2818844698888270260}
   - component: {fileID: -4505470967124097918}
   - component: {fileID: 5841794604906695400}
+  - component: {fileID: -1197031805555222620}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -777,6 +871,9 @@ Transform:
   m_Children:
   - {fileID: 8274935638305073705}
   - {fileID: 2331089185543748787}
+  - {fileID: 8154295895941638773}
+  - {fileID: 4436932899182608027}
+  - {fileID: 4618040187904352724}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -809,6 +906,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 9117857247562382210}
   _networkObjectCache: {fileID: 9117857247562382210}
+  gravity: -9.81
   _moveRate: 5
   _smoothInputSpeed: 0.015
   jumpHeight: 1
@@ -819,6 +917,7 @@ MonoBehaviour:
   minXLook: -89
   maxXLook: 89
   lookSensitivity: 0.1
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &9117857247562382210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,6 +939,7 @@ MonoBehaviour:
   - {fileID: -2818844698888270260}
   - {fileID: -4505470967124097918}
   - {fileID: 5841794604906695400}
+  - {fileID: -1197031805555222620}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
@@ -986,7 +1086,7 @@ MonoBehaviour:
       - m_Target: {fileID: -7450950589511683050}
         m_TargetAssemblyTypeName: FishNet.Example.Prediction.CharacterControllers.PlayerController,
           Assembly-CSharp
-        m_MethodName: OnJump
+        m_MethodName: OnJumpInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1126,3 +1226,22 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 9117857247562382210}
   startHealth: 100
   healthText: {fileID: 3605785390716523709}
+--- !u!114 &-1197031805555222620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117857247562382221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ed7dd160d603b4697862b95d1f5e50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 6
+  _addedNetworkObject: {fileID: 9117857247562382210}
+  _networkObjectCache: {fileID: 9117857247562382210}
+  hatCosmetics:
+  - {fileID: 5227228114914271230}
+  - {fileID: 2968875564188385279}
+  - {fileID: 5897528077697835201}

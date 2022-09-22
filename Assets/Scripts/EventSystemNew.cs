@@ -6,7 +6,45 @@ public enum Event_Type
 {
     Player_Died,
     Player_Respawned,
-    Respawn_Player
+    Respawn_Player,
+
+    // In-Game Events
+    SPIDER_DESTROY_CAMERA,
+    SPIDER_DIED,
+    SPIDER_RESPAWNED,
+
+    // Spider Events
+    IS_SWINGING,
+    COLLIDED,
+    CAN_SWING,
+
+    // Game States
+    PRE_GAME,
+    GAME_STARTED,
+    GAME_WON,
+    GAME_ENDED,
+
+    UPDATE_SCORE,
+
+    CHANGE_SPECTATOR,
+
+    TRIGGER_SOUND,
+
+    SYNC_TIMER,
+
+    // Spawning
+    SPAWN_PLAYER,
+    SPAWN_SPIDER,
+
+    // Input Events
+    Move,
+    Jump,
+    Shoot,
+    Swing,
+    Fall,
+    ChangeSpectator,
+    ForceRespawn,
+    RopeForward
 }
 
 public static class EventSystemNew

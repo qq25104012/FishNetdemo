@@ -5,6 +5,7 @@ using FishNet.Object;
 using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using FishNet.Managing.Scened;
+using FishNet;
 
 public class PlayerSpawner : NetworkBehaviour
 {
@@ -25,13 +26,6 @@ public class PlayerSpawner : NetworkBehaviour
     {
         EventSystemNew.Unsubscribe(Event_Type.Respawn_Player, RespawnPlayer);
     }
-
-    //public override void OnStartNetwork()
-    //{
-    //    base.OnStartNetwork();
-
-    //    SceneManager.AddOwnerToDefaultScene(NetworkObject);
-    //}
 
     public override void OnStartClient()
     {
