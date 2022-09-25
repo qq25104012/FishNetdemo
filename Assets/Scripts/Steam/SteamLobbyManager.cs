@@ -135,6 +135,8 @@ public class SteamLobbyManager : MonoBehaviour
             InstanceFinder.ServerManager.StartConnection();
             InstanceFinder.ClientManager.StartConnection();
 
+            InstanceFinder.ClientManager.Connection.CustomData = new Dictionary<string, int>();
+
             Debug.Log("Lobby creation result OK");
         }
     }
@@ -170,6 +172,8 @@ public class SteamLobbyManager : MonoBehaviour
         if (!isHost)
         {
             InstanceFinder.ClientManager.StartConnection(hostAddress);
+
+            InstanceFinder.ClientManager.Connection.CustomData = new Dictionary<string, int>();
         }
     }
 

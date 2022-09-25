@@ -1,47 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FishNet;
 using FishNet.Object;
 
 public class SpiderCosmetics : NetworkBehaviour
 {
     [SerializeField] GameObject[] hatCosmetics;
 
-    int hatInt = 0;
+    private int hatInt = 0;
+
+    private void Awake()
+    {
+        foreach (var item in hatCosmetics)
+        {
+            item.SetActive(false);
+        }
+    }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
 
-        foreach (var item in hatCosmetics)
-        {
-            item.SetActive(false);
-        }
-
         if (!IsOwner) return;
 
-        Dictionary<string, int> customData = (Dictionary<string, int>)Owner.CustomData;
-        
-        if (customData.ContainsKey("Hat"))
+        if (PlayerPrefs.HasKey("Hat"))
         {
-            hatInt = customData["Hat"];
-
-            Debug.Log("Has Hat");
-        }
-        else
-        {
-            customData.Add("Hat", 1);
-            Owner.CustomData = customData;
-            hatInt = 1;
+            hatInt = PlayerPrefs.GetInt("Hat");
         }
 
-        if (customData.ContainsKey("Hat"))
-        {
-            hatInt = customData["Hat"];
+        RPC_SetHat(hatInt);
+    }
 
-            Debug.Log("Has Hat: " + customData["Hat"]);
-        }
+    [ObserversRpc]
+    public void RPC_SetHat(int _index)
+    {
+        hatInt = _index;
 
         hatCosmetics[hatInt].SetActive(true);
     }
