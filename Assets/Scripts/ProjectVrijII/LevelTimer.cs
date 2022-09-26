@@ -37,13 +37,6 @@ public class LevelTimer : NetworkBehaviour
         EventSystemNew<float, bool>.Unsubscribe(Event_Type.SYNC_TIMER, SyncTimer);
     }
 
-    public override void OnStartNetwork()
-    {
-        base.OnStartNetwork();
-
-        InstanceFinder.NetworkManager.SceneManager.AddOwnerToDefaultScene(NetworkObject);
-    }
-
     public override void OnStartClient()
     {
         base.OnStartClient();
