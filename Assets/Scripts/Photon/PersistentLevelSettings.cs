@@ -18,6 +18,9 @@ public class PersistentLevelSettings : NetworkBehaviour
     [SyncVar(OnChange = nameof(UpdateScoreNeeded))]
     public int scoreNeeded;
 
+    [SyncVar]
+    private bool hasInitiated;
+
     [Header("Settings")]
     [SerializeField] private int minMinutes;
     [SerializeField] private int maxMinutes;
@@ -28,18 +31,25 @@ public class PersistentLevelSettings : NetworkBehaviour
     {
         base.OnStartNetwork();
 
-        if (!IsServer) return;
-
         if (Instance != null && Instance != this)
         {
+            if (!IsServer) return;
             InstanceFinder.ServerManager.Despawn(gameObject);
             return;
         }
 
         Instance = this;
 
-        matchStartTime = minMinutes;
-        scoreNeeded = minScoreNeeded;
+        if (!hasInitiated)
+        {
+            if (IsServer)
+            {
+                hasInitiated = true;
+            }
+
+            matchStartTime = minMinutes;
+            scoreNeeded = minScoreNeeded;
+        }
     }
 
     public void ChangeMinutes(int _upDown)
