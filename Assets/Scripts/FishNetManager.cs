@@ -13,13 +13,6 @@ public class FishNetManager : NetworkBehaviour
 
     [SerializeField] private GameObject persistentLevelSettingsPrefab;
 
-    public override void OnStartNetwork()
-    {
-        base.OnStartNetwork();
-
-        InstanceFinder.NetworkManager.SceneManager.AddOwnerToDefaultScene(NetworkObject);
-    }
-
     public override void OnStartServer()
     {
         base.OnStartServer();
