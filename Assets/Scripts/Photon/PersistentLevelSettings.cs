@@ -24,9 +24,9 @@ public class PersistentLevelSettings : NetworkBehaviour
     [SerializeField] private int minScoreNeeded;
     [SerializeField] private int maxScoreNeeded;
 
-    public override void OnStartClient()
+    public override void OnStartNetwork()
     {
-        base.OnStartClient();
+        base.OnStartNetwork();
 
         if (!IsServer) return;
 
