@@ -23,7 +23,7 @@ public class LeaderboardItem : NetworkBehaviour
     {
         playerData = _player;
 
-        playerNameText.text = _player.Name + " | " + score;
+        playerNameText.text = playerData.Name + " | " + score;
     }
 
     public void ChangeScore(int _upDown)
