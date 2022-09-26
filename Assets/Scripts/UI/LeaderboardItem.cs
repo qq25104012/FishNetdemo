@@ -16,6 +16,7 @@ public class LeaderboardItem : NetworkBehaviour
     private int _score;
     public int score { get { return _score; } }
 
+    [SyncVar]
     private Friend playerData;
 
     public void Initialize(Friend _player)
