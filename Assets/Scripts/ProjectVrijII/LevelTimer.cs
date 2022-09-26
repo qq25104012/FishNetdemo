@@ -37,8 +37,10 @@ public class LevelTimer : NetworkBehaviour
         EventSystemNew<float, bool>.Unsubscribe(Event_Type.SYNC_TIMER, SyncTimer);
     }
 
-    private void Awake()
+    public override void OnStartClient()
     {
+        base.OnStartClient();
+
         startTime = PersistentLevelSettings.Instance.matchStartTime;
 
         startTime *= 60;

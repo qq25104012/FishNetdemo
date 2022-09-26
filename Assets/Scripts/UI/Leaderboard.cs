@@ -19,15 +19,12 @@ public class Leaderboard : NetworkBehaviour
 
     int maxScore = 0;
 
-    private void Awake()
-    {
-        maxScore = PersistentLevelSettings.Instance.scoreNeeded;
-        scoreNeededText.text = "First to " + maxScore.ToString() + " points";
-    }
-
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        maxScore = PersistentLevelSettings.Instance.scoreNeeded;
+        scoreNeededText.text = "First to " + maxScore.ToString() + " points";
 
         if (!IsServer) return;
 
