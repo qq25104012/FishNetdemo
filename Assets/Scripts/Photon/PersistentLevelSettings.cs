@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
+using FishNet.Object;
+using FishNet;
 
-public class PersistentLevelSettings : MonoBehaviour
+public class PersistentLevelSettings : NetworkBehaviour
 {
     public static PersistentLevelSettings Instance { get; private set; }
 
@@ -17,19 +19,24 @@ public class PersistentLevelSettings : MonoBehaviour
     public int scoreNeeded;
 
     [Header("Settings")]
-    [SerializeField] private int minMinutes, maxMinutes;
-    [SerializeField] private int minScoreNeeded, maxScoreNeeded;
+    [SerializeField] private int minMinutes;
+    [SerializeField] private int maxMinutes;
+    [SerializeField] private int minScoreNeeded;
+    [SerializeField] private int maxScoreNeeded;
 
-    private void Awake()
+    public override void OnStartClient()
     {
+        base.OnStartClient();
+
+        if (!IsServer) return;
+
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject.GetComponent(Instance.GetType()));
+            InstanceFinder.ServerManager.Despawn(gameObject);
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         matchStartTime = minMinutes;
         scoreNeeded = minScoreNeeded;

@@ -8,8 +8,6 @@ using FishNet.Object;
 
 public class LevelTimer : NetworkBehaviour
 {
-    [SerializeField] private UnityEvent onGameStart;
-
     [SerializeField] private TextMeshProUGUI timeTextVR;
     [SerializeField] private TextMeshProUGUI timeTextNonVR;
 
@@ -27,7 +25,7 @@ public class LevelTimer : NetworkBehaviour
 
         EventSystemNew<string>.Subscribe(Event_Type.GAME_WON, GameWon);
 
-        EventSystemNew<float, bool, bool>.Subscribe(Event_Type.SYNC_TIMER, SyncTimer);
+        EventSystemNew<float, bool>.Subscribe(Event_Type.SYNC_TIMER, SyncTimer);
     }
 
     private void OnDisable()
@@ -36,7 +34,7 @@ public class LevelTimer : NetworkBehaviour
 
         EventSystemNew<string>.Unsubscribe(Event_Type.GAME_WON, GameWon);
 
-        EventSystemNew<float, bool, bool>.Unsubscribe(Event_Type.SYNC_TIMER, SyncTimer);
+        EventSystemNew<float, bool>.Unsubscribe(Event_Type.SYNC_TIMER, SyncTimer);
     }
 
     private void Awake()
@@ -105,14 +103,12 @@ public class LevelTimer : NetworkBehaviour
         float minutes = Mathf.FloorToInt(_timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(_timeToDisplay % 60);
 
-        timeTextVR.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        //timeTextVR.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         timeTextNonVR.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     private void StartTimer()
     {
-        onGameStart?.Invoke();
-
         timerIsRunning = true;
 
         timeRemaining = startTime;

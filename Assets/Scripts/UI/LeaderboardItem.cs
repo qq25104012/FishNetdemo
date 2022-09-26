@@ -2,30 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Photon.Pun;
-using Photon.Realtime;
+using Steamworks;
+using Steamworks.Data;
+using FishNet.Object.Synchronizing;
+using FishNet;
+using FishNet.Object;
 
-public class LeaderboardItem : MonoBehaviour
+public class LeaderboardItem : NetworkBehaviour
 {
     [SerializeField] TextMeshProUGUI playerNameText;
-    [SerializeField] TextMeshProUGUI scoreText;
 
-    public void Initialize(Player _player)
+    [SyncVar(OnChange = nameof(SyncScore))]
+    private int _score;
+    public int score { get { return _score; } }
+
+    private Friend playerData;
+
+    public void Initialize(Friend _player)
     {
-        playerNameText.text = _player.NickName + " |";
+        playerData = _player;
 
-        if (_player.CustomProperties.ContainsKey("Score"))
-        {
-            scoreText.text = ((int)_player.CustomProperties["Score"]).ToString();
-        }
-        else
-        {
-            scoreText.text = "0";
-        }
+        playerNameText.text = _player.Name + " | " + score;
     }
 
-    public void UpdateScore(int _score)
+    public void ChangeScore(int _upDown)
     {
-        scoreText.text = _score.ToString();
+        if (!InstanceFinder.IsServer) return;
+
+        _score += _upDown;
+    }
+
+    private void SyncScore(int prev, int next, bool asServer)
+    {
+        _score = next;
+        playerNameText.text = playerData.Name + " | " + score;
     }
 }

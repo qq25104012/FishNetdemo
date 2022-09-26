@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Realtime;
-using Photon.Pun;
-using ExitGames.Client.Photon;
+using Steamworks;
+using Steamworks.Data;
 using TMPro;
+using FishNet;
+using FishNet.Object;
 
-public class Leaderboard : MonoBehaviourPunCallbacks
+public class Leaderboard : NetworkBehaviour
 {
     [SerializeField] TextMeshProUGUI scoreNeededText;
 
@@ -14,93 +15,98 @@ public class Leaderboard : MonoBehaviourPunCallbacks
 
     [SerializeField] GameObject leaderboardItemPrefab;
 
-    Dictionary<Player, LeaderboardItem> leaderboardItems = new Dictionary<Player, LeaderboardItem>();
+    Dictionary<Friend, LeaderboardItem> leaderboardItems = new Dictionary<Friend, LeaderboardItem>();
 
     int maxScore = 0;
 
-    public override void OnEnable()
+    private void Awake()
     {
-        base.OnEnable();
-
-        EventSystemNew<Player, int>.Subscribe(Event_Type.UPDATE_SCORE, UpdateScore);
+        maxScore = PersistentLevelSettings.Instance.scoreNeeded;
+        scoreNeededText.text = "First to " + maxScore.ToString() + " points";
     }
 
-    public override void OnDisable()
+    public override void OnStartClient()
     {
-        base.OnDisable();
+        base.OnStartClient();
 
-        EventSystemNew<Player, int>.Unsubscribe(Event_Type.UPDATE_SCORE, UpdateScore);
-    }
+        if (!IsServer) return;
 
-    private void Start()
-    {
-        foreach (Player player in PhotonNetwork.PlayerList)
+        foreach (var player in SteamLobbyManager.currentLobby.Members)
         {
-            if (!player.CustomProperties.ContainsKey("isVR"))
-            {
-                AddLeaderboardItem(player);
-            }
+            AddLeaderboardItem(player);
         }
 
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("ScoreNeeded"))
-        {
-            maxScore = (int)PhotonNetwork.CurrentRoom.CustomProperties["ScoreNeeded"];
-
-            scoreNeededText.text = string.Format("<color=#FF9F00>First to</color> <color=#18FF00>{0}</color> <color=#FF9F00>points</color>", maxScore);
-        }
+        // SteamID is the same as LocalConnection.GetAddress()
     }
 
-    private void AddLeaderboardItem(Player _player)
+    public void OnEnable()
     {
-        LeaderboardItem item = Instantiate(leaderboardItemPrefab, leaderboardContainer).GetComponent<LeaderboardItem>();
+        EventSystemNew<string, int>.Subscribe(Event_Type.UPDATE_SCORE, UpdateScore);
 
-        item.Initialize(_player);
-
-        leaderboardItems.Add(_player, item);
+        SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberDisconnected;
     }
 
-    private void RemoveLeaderboardItem(Player _player)
+    public void OnDisable()
     {
+        EventSystemNew<string, int>.Unsubscribe(Event_Type.UPDATE_SCORE, UpdateScore);
+
+        SteamMatchmaking.OnLobbyMemberJoined -= OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave -= OnLobbyMemberDisconnected;
+    }
+
+    private void AddLeaderboardItem(Friend _player)
+    {
+        if (!IsServer) return;
+
+        GameObject item = Instantiate(leaderboardItemPrefab, leaderboardContainer);
+        Spawn(item);
+
+        item.GetComponent<LeaderboardItem>().Initialize(_player);
+
+        leaderboardItems.Add(_player, item.GetComponent<LeaderboardItem>());
+    }
+
+    private void RemoveLeaderboardItem(Friend _player)
+    {
+        if (!IsServer) return;
+
         if (leaderboardItems.ContainsKey(_player))
         {
-            Destroy(leaderboardItems[_player].gameObject);
+            InstanceFinder.ServerManager.Despawn(leaderboardItems[_player].gameObject);
 
             leaderboardItems.Remove(_player);
         }
     }
 
-    private void UpdateScore(Player _player, int _score)
+    private void UpdateScore(string _steamID, int _score)
     {
-        leaderboardItems[_player].UpdateScore(_score);
-
-        if (_score >= maxScore)
+        foreach (var player in SteamLobbyManager.currentLobby.Members)
         {
-            object[] content = new object[] { _player.NickName };
+            if (player.Id.Value == ulong.Parse(_steamID))
+            {
+                leaderboardItems[player].ChangeScore(_score);
 
-            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-
-            PhotonNetwork.RaiseEvent((int)Event_Code.GameWon, content, raiseEventOptions, SendOptions.SendReliable);
+                if (leaderboardItems[player].score >= maxScore)
+                {
+                    // Game Won by Player Name
+                    Debug.Log("Game Won by " + player.Name);
+                }
+            }
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    private void OnLobbyMemberJoined(Lobby _lobby, Friend _player)
     {
-        if (!newPlayer.CustomProperties.ContainsKey("isVR"))
-        {
-            AddLeaderboardItem(newPlayer);
-        }
+        if (!IsServer) return;
+
+        AddLeaderboardItem(_player);
     }
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    private void OnLobbyMemberDisconnected(Lobby _lobby, Friend _player)
     {
-        RemoveLeaderboardItem(otherPlayer);
-    }
+        if (!IsServer) return;
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        if (changedProps.ContainsKey("Score"))
-        {
-            UpdateScore(targetPlayer, (int)changedProps["Score"]);
-        }
+        RemoveLeaderboardItem(_player);
     }
 }

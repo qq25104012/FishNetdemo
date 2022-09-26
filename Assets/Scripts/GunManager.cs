@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object;
+using Steamworks;
+using FishNet.Connection;
 
 public class GunManager : NetworkBehaviour
 {
@@ -29,20 +31,20 @@ public class GunManager : NetworkBehaviour
         {
             canShoot = false;
 
-            ServerFire(firePoint.position, firePoint.forward);
+            ServerFire(firePoint.position, firePoint.forward, LocalConnection);
 
             Invoke(nameof(ResetShot), cooldown);
         }
     }
 
     [ServerRpc]
-    private void ServerFire(Vector3 _firePoint, Vector3 _fireDirection)
+    private void ServerFire(Vector3 _firePoint, Vector3 _fireDirection, NetworkConnection _connection)
     {
         if (Physics.Raycast(_firePoint, _fireDirection, out RaycastHit hit))
         {
             if (hit.transform.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(damage);
+                damageable.TakeDamage(damage, _connection);
             }
         }
     }

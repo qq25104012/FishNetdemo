@@ -923,6 +923,7 @@ GameObject:
   m_Component:
   - component: {fileID: 275196894}
   - component: {fileID: 275196895}
+  - component: {fileID: 275196896}
   m_Layer: 0
   m_Name: FishNetManager
   m_TagString: Untagged
@@ -957,7 +958,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750ecc668f846f549b49d5cda3953758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 275196896}
+  _networkObjectCache: {fileID: 275196896}
   sceneName: Level
+  persistentLevelSettingsPrefab: {fileID: 4223852933306464079, guid: b952e16abcb61754e8af2b9492c91642,
+    type: 3}
+--- !u!114 &275196896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275196893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  _networkBehaviours:
+  - {fileID: 275196895}
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  _isNetworked: 1
+  _isGlobal: 0
+  _disableOnDespawn: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: -1
+  _scenePathHash: 2571393946
+  <SceneId>k__BackingField: 11044052904059996952
+  <AssetPathHash>k__BackingField: 0
+  _sceneNetworkObjects:
+  - {fileID: 0}
+  - {fileID: 275196896}
 --- !u!1 &290062591
 GameObject:
   m_ObjectHideFlags: 0

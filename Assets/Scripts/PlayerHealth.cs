@@ -5,6 +5,8 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
 using FishNet.Connection;
+using FishNet;
+using Steamworks;
 
 public class PlayerHealth : NetworkBehaviour, IDamageable
 {
@@ -21,7 +23,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         health = startHealth;
     }
 
-    public void TakeDamage(float _damage)
+    public void TakeDamage(float _damage, NetworkConnection _connection)
     {
         if (!IsServer) return;
 
@@ -30,6 +32,8 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         if (health <= 0f)
         {
             health = 0f;
+
+            EventSystemNew<string, int>.RaiseEvent(Event_Type.UPDATE_SCORE, _connection.GetAddress(), 1);
 
             RPC_PlayerDied(Owner);
 
