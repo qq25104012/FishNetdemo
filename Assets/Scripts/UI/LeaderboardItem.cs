@@ -16,14 +16,14 @@ public class LeaderboardItem : NetworkBehaviour
     private int _score;
     public int score { get { return _score; } }
 
-    [SyncVar]
+    [SyncVar(OnChange = nameof(SyncName))]
     private Friend playerData;
 
     public void Initialize(Friend _player)
     {
         playerData = _player;
 
-        playerNameText.text = playerData.Name + " | " + score;
+        playerNameText.text = _player.Name + " | " + score;
     }
 
     public void ChangeScore(int _upDown)
@@ -36,6 +36,12 @@ public class LeaderboardItem : NetworkBehaviour
     private void SyncScore(int prev, int next, bool asServer)
     {
         _score = next;
+        playerNameText.text = playerData.Name + " | " + score;
+    }
+
+    private void SyncName(Friend prev, Friend next, bool asServer)
+    {
+        playerData = next;
         playerNameText.text = playerData.Name + " | " + score;
     }
 }
