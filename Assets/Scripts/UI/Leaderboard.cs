@@ -19,6 +19,13 @@ public class Leaderboard : NetworkBehaviour
 
     int maxScore = 0;
 
+    public override void OnStartNetwork()
+    {
+        base.OnStartNetwork();
+
+        InstanceFinder.NetworkManager.SceneManager.AddOwnerToDefaultScene(NetworkObject);
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
