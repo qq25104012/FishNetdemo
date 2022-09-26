@@ -31,6 +31,8 @@ public class Leaderboard : NetworkBehaviour
         base.OnStartClient();
 
         //maxScore = PersistentLevelSettings.Instance.scoreNeeded;
+        Debug.Log("Score needed: " + PersistentLevelSettings.Instance.scoreNeeded);
+
         scoreNeededText.text = "First to " + maxScore.ToString() + " points";
 
         if (!IsServer) return;
