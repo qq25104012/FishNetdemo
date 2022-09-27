@@ -33,17 +33,25 @@ public class SpiderCosmetics : NetworkBehaviour
         RPC_SetHat(hatInt);
     }
 
+    private void Update()
+    {
+        if (!IsOwner) return;
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            RPC_SetHat(2);
+        }
+    }
+
     [ServerRpc(RequireOwnership = true)]
     public void RPC_SetHat(int _index)
     {
         hatInt = _index;
-
-        hatCosmetics[hatInt].SetActive(true);
     }
 
     private void SyncHat(int prev, int next, bool asServer)
     {
-        Debug.Log("Sync Hat");
+        hatInt = next;
 
         hatCosmetics[hatInt].SetActive(true);
     }
