@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.Events;
 using FishNet;
 using FishNet.Object;
+using FishNet.Connection;
 
 public class LevelTimer : NetworkBehaviour
 {
@@ -25,7 +26,17 @@ public class LevelTimer : NetworkBehaviour
 
         EventSystemNew<string>.Subscribe(Event_Type.GAME_WON, GameWon);
 
-        EventSystemNew<float, bool>.Subscribe(Event_Type.SYNC_TIMER, SyncTimer);
+        EventSystemNew<float, bool>.Subscribe(Event_Type.SYNC_TIMER, RPC_SyncTimer);
+
+        InstanceFinder.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientLoadedStartScenes;
+    }
+
+    private void SceneManager_OnClientLoadedStartScenes(NetworkConnection conn, bool asServer)
+    {
+        if (IsServer)
+        {
+            RPC_SyncTimer(timeRemaining, timerIsRunning);
+        }
     }
 
     private void OnDisable()
@@ -34,7 +45,7 @@ public class LevelTimer : NetworkBehaviour
 
         EventSystemNew<string>.Unsubscribe(Event_Type.GAME_WON, GameWon);
 
-        EventSystemNew<float, bool>.Unsubscribe(Event_Type.SYNC_TIMER, SyncTimer);
+        EventSystemNew<float, bool>.Unsubscribe(Event_Type.SYNC_TIMER, RPC_SyncTimer);
     }
 
     public override void OnStartClient()
@@ -79,7 +90,7 @@ public class LevelTimer : NetworkBehaviour
 
                 if (IsServer)
                 {
-                    SyncTimer(timeRemaining, timerIsRunning);
+                    RPC_SyncTimer(timeRemaining, timerIsRunning);
                 }
 
                 //if (PhotonNetwork.IsMasterClient)
@@ -123,11 +134,11 @@ public class LevelTimer : NetworkBehaviour
 
         timeRemaining = startTime;
 
-        SyncTimer(timeRemaining, timerIsRunning);
+        RPC_SyncTimer(timeRemaining, timerIsRunning);
     }
 
-    [ObserversRpc(BufferLast = true)]
-    private void SyncTimer(float _timeRemaining, bool _timerIsRunning)
+    [ObserversRpc]
+    private void RPC_SyncTimer(float _timeRemaining, bool _timerIsRunning)
     {
         timeRemaining = _timeRemaining;
         timerIsRunning = _timerIsRunning;
