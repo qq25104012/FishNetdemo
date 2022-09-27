@@ -23,7 +23,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         health = startHealth;
     }
 
-    public void TakeDamage(float _damage, NetworkConnection _connection)
+    public void TakeDamage(float _damage, string _address)
     {
         if (!IsServer) return;
 
@@ -33,7 +33,8 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         {
             health = 0f;
 
-            EventSystemNew<string, int>.RaiseEvent(Event_Type.UPDATE_SCORE, _connection.GetAddress(), 1);
+            Debug.Log("Connection: " + _address);
+            EventSystemNew<string, int>.RaiseEvent(Event_Type.UPDATE_SCORE, _address, 1);
 
             RPC_PlayerDied(Owner);
 

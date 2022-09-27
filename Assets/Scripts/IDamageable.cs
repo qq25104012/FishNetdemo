@@ -5,5 +5,5 @@ using FishNet.Connection;
 
 public interface IDamageable
 {
-    public void TakeDamage(float _damage, NetworkConnection _connection);
+    public void TakeDamage(float _damage, string _address);
 }

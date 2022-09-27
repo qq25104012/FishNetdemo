@@ -33,20 +33,20 @@ public class GunManager : NetworkBehaviour
         {
             canShoot = false;
 
-            ServerFire(firePoint.position, firePoint.forward, LocalConnection);
+            ServerFire(firePoint.position, firePoint.forward, LocalConnection.GetAddress());
 
             Invoke(nameof(ResetShot), cooldown);
         }
     }
 
     [ServerRpc]
-    private void ServerFire(Vector3 _firePoint, Vector3 _fireDirection, NetworkConnection _connection)
+    private void ServerFire(Vector3 _firePoint, Vector3 _fireDirection, string _address)
     {
         if (Physics.Raycast(_firePoint, _fireDirection, out RaycastHit hit))
         {
             if (hit.transform.TryGetComponent(out IDamageable damageable))
             {
-                damageable.TakeDamage(damage, _connection);
+                damageable.TakeDamage(damage, _address);
             }
             
             if (hit.transform.TryGetComponent(out Rigidbody rb))
