@@ -9,7 +9,7 @@ public class SpiderCosmetics : NetworkBehaviour
     [SerializeField] GameObject[] hatCosmetics;
 
     [SyncVar(OnChange = nameof(SyncHat))]
-    private int hatInt = 0;
+    private int hatInt = -1;
 
     private void Awake()
     {
@@ -25,10 +25,7 @@ public class SpiderCosmetics : NetworkBehaviour
 
         if (!IsOwner) return;
 
-        if (PlayerPrefs.HasKey("Hat"))
-        {
-            hatInt = PlayerPrefs.GetInt("Hat");
-        }
+        hatInt = PlayerPrefs.GetInt("Hat", 0);
 
         RPC_SetHat(hatInt);
     }

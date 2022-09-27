@@ -53,6 +53,14 @@ public class LevelTimer : NetworkBehaviour
         if (gameOver)
             return;
 
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (IsServer)
+            {
+                StartTimer();
+            }
+        }
+
         if (timerIsRunning)
         {
             if (timeRemaining > 0)
