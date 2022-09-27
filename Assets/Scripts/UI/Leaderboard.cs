@@ -24,7 +24,6 @@ public class Leaderboard : NetworkBehaviour
         base.OnStartClient();
 
         maxScore = PersistentLevelSettings.Instance.scoreNeeded;
-        Debug.Log("Score needed: " + PersistentLevelSettings.Instance.scoreNeeded);
 
         scoreNeededText.text = "First to " + maxScore.ToString() + " points";
 
@@ -34,8 +33,6 @@ public class Leaderboard : NetworkBehaviour
         {
             AddLeaderboardItem(player);
         }
-
-        // SteamID is the same as LocalConnection.GetAddress()
     }
 
     public void OnEnable()
@@ -86,8 +83,6 @@ public class Leaderboard : NetworkBehaviour
         {
             if (player.Id.Value == ulong.Parse(_steamID))
             {
-                Debug.Log("Update Score");
-
                 leaderboardItems[player].ChangeScore(_score);
 
                 if (leaderboardItems[player].score >= maxScore)
