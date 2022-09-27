@@ -80,10 +80,14 @@ public class Leaderboard : NetworkBehaviour
 
     private void UpdateScore(string _steamID, int _score)
     {
+        if (!IsServer) return;
+
         foreach (var player in SteamLobbyManager.currentLobby.Members)
         {
             if (player.Id.Value == ulong.Parse(_steamID))
             {
+                Debug.Log("Update Score");
+
                 leaderboardItems[player].ChangeScore(_score);
 
                 if (leaderboardItems[player].score >= maxScore)

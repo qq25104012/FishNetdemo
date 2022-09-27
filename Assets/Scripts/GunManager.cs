@@ -46,6 +46,11 @@ public class GunManager : NetworkBehaviour
             {
                 damageable.TakeDamage(damage, _connection);
             }
+            
+            if (hit.transform.TryGetComponent(out Rigidbody rb))
+            {
+                rb.AddForce((hit.point - transform.position) * 10f);
+            }
         }
     }
 

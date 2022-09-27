@@ -28,7 +28,7 @@ public class LeaderboardItem : NetworkBehaviour
 
     public void ChangeScore(int _upDown)
     {
-        if (!InstanceFinder.IsServer) return;
+        if (!IsServer) return;
 
         _score += _upDown;
     }
