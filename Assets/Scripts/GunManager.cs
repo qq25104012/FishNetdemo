@@ -33,7 +33,7 @@ public class GunManager : NetworkBehaviour
         {
             canShoot = false;
 
-            ServerFire(firePoint.position, firePoint.forward, LocalConnection.GetAddress());
+            ServerFire(firePoint.position, firePoint.forward, SteamClient.SteamId.ToString());
 
             Invoke(nameof(ResetShot), cooldown);
         }
