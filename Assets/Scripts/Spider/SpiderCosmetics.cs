@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 
 public class SpiderCosmetics : NetworkBehaviour
 {
     [SerializeField] GameObject[] hatCosmetics;
 
+    [SyncVar(OnChange = nameof(SyncHat))]
     private int hatInt = 0;
 
     private void Awake()
@@ -31,10 +33,17 @@ public class SpiderCosmetics : NetworkBehaviour
         RPC_SetHat(hatInt);
     }
 
-    [ObserversRpc]
+    [ServerRpc(RequireOwnership = true)]
     public void RPC_SetHat(int _index)
     {
         hatInt = _index;
+
+        hatCosmetics[hatInt].SetActive(true);
+    }
+
+    private void SyncHat(int prev, int next, bool asServer)
+    {
+        Debug.Log("Sync Hat");
 
         hatCosmetics[hatInt].SetActive(true);
     }
