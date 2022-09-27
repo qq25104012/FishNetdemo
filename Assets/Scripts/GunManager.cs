@@ -19,6 +19,8 @@ public class GunManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Shoot();

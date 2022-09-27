@@ -35,8 +35,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
 
             EventSystemNew<string, int>.RaiseEvent(Event_Type.UPDATE_SCORE, _connection.GetAddress(), 1);
 
-            Debug.Log("Address: + " + _connection.GetAddress());
-
             RPC_PlayerDied(Owner);
 
             Despawn();
