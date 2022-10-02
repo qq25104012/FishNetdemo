@@ -390,18 +390,22 @@ namespace FishyFacepunch.Server
             };
 
             //If not started flush incoming from local client.
-            if (!started)
+            if (!started && _clientHostStarted)
             {
                 base.ClearQueue(_clientHostIncoming);
                 base.Transport.HandleRemoteConnectionState(new RemoteConnectionStateArgs(RemoteConnectionState.Stopped, FishyFacepunch.CLIENT_HOST_ID, Transport.Index));
                 _steamIds.Remove(steamId);
             }
-            else
+            //If started.
+            else if (started)
             {
                 _steamIds[steamId] = FishyFacepunch.CLIENT_HOST_ID;
                 base.Transport.HandleRemoteConnectionState(new RemoteConnectionStateArgs(RemoteConnectionState.Started, FishyFacepunch.CLIENT_HOST_ID, Transport.Index));
             }
+
+            _clientHostStarted = started;
         }
+
         /// <summary>
         /// Queues a received packet from the local client.
         /// </summary>

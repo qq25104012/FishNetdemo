@@ -984,14 +984,13 @@ MonoBehaviour:
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
-  _disableOnDespawn: 0
+  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: -1
   _scenePathHash: 2571393946
   <SceneId>k__BackingField: 11044052904059996952
   <AssetPathHash>k__BackingField: 0
   _sceneNetworkObjects:
-  - {fileID: 0}
   - {fileID: 275196896}
 --- !u!1 &290062591
 GameObject:
@@ -2076,7 +2075,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 691965043}
-  - component: {fileID: 691965042}
   - component: {fileID: 691965044}
   - component: {fileID: 691965045}
   m_Layer: 0
@@ -2086,19 +2084,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &691965042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691965041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 010a658be1e4b93479312453766e906c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameAppId: 480
 --- !u!4 &691965043
 Transform:
   m_ObjectHideFlags: 0
@@ -6294,7 +6279,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _spawnablePrefabs
       value: 
-      objectReference: {fileID: 11400000, guid: fd4d07dd4542b0f43a78f30aa3f59cd6,
+      objectReference: {fileID: 11400000, guid: ec64eb18c93ab344892891f33edbf82a,
         type: 2}
     - target: {fileID: 6883511005393878321, guid: cc86fb3e6973d894faa0e453e6feb9f2,
         type: 3}
@@ -6356,5 +6341,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4092479292390809623, guid: cc86fb3e6973d894faa0e453e6feb9f2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cc86fb3e6973d894faa0e453e6feb9f2, type: 3}

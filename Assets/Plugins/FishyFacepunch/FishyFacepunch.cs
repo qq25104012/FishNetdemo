@@ -4,7 +4,6 @@ using FishNet.Transporting;
 using Steamworks;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace FishyFacepunch
 {
@@ -83,8 +82,6 @@ namespace FishyFacepunch
         internal const int CLIENT_HOST_ID = short.MaxValue;
         #endregion
 
-        [SerializeField] private UnityEvent OnInitializeFailed;
-
         #region Initialization and Unity.
         public override void Initialize(NetworkManager networkManager, int transportIndex)
         {
@@ -93,18 +90,8 @@ namespace FishyFacepunch
             CreateChannelData();
 
 #if !UNITY_SERVER
-            try
-            {
-                SteamClient.Init(_steamAppID, true);
-                SteamNetworking.AllowP2PPacketRelay(true);
-            }
-            catch
-            {
-                OnInitializeFailed?.Invoke();
-                Debug.Log("Failed to Load Steam Data");
-
-                return;
-            }
+            SteamClient.Init(_steamAppID, true);
+            SteamNetworking.AllowP2PPacketRelay(true);
 #endif
             _clientHost.Initialize(this);
             _client.Initialize(this);
@@ -113,9 +100,9 @@ namespace FishyFacepunch
 
         private void OnDestroy()
         {
-            SteamClient.Shutdown();
-
             Shutdown();
+
+            SteamClient.Shutdown();
         }
 
         private void Update()
@@ -146,7 +133,7 @@ namespace FishyFacepunch
             SteamNetworkingUtils.InitRelayNetworkAccess();
             LocalUserSteamID = Steamworks.SteamClient.SteamId.Value;
 #endif
-        } 
+        }
         #endregion
 
         #region ConnectionStates.
@@ -388,8 +375,11 @@ namespace FishyFacepunch
         public override void Shutdown()
         {
             //Stops client then server connections.
-            StopConnection(false);
-            StopConnection(true);
+            if ((_client.GetLocalConnectionState() != LocalConnectionState.Stopped) || (_server.GetLocalConnectionState() != LocalConnectionState.Stopped))
+            {
+                StopConnection(false);
+                StopConnection(true);
+            }
         }
 
         #region Privates.
