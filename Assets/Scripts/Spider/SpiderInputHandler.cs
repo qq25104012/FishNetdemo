@@ -6,16 +6,6 @@ using UnityEngine.InputSystem;
 
 public class SpiderInputHandler : NetworkBehaviour
 {
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-
-        if (!IsOwner)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     public void OnMoveInput(InputAction.CallbackContext _context)
     {
         Vector2 input = _context.ReadValue<Vector2>();
