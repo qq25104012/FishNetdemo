@@ -23,11 +23,7 @@ using UnityEngine.InputSystem;
 [DefaultExecutionOrder(0)] // Any controller of this spider should have default execution -1
 public class Spider : MonoBehaviour
 {
-
     [SerializeField] Animator animator;
-
-    //SOUND
-    //private FMOD.Studio.EventInstance spiderJumpSound;
 
     Vector3 previousPos;
 
@@ -39,9 +35,7 @@ public class Spider : MonoBehaviour
     [SerializeField] float forwardForce = 1f;
     [SerializeField] float upForce = 1f;
 
-    [SerializeField] KeyCode jumpKey = KeyCode.Space;
-
-    Rigidbody rb;
+    public Rigidbody rb { get; private set; }
 
     [Header("Debug")]
     public bool showDebug;
@@ -95,13 +89,6 @@ public class Spider : MonoBehaviour
 
     private Vector3 bodyY;
     private Vector3 bodyZ;
-
-    [Header("Breathing")]
-    public bool breathing;
-    [Range(0.01f, 20)]
-    public float breathePeriod;
-    [Range(0, 1)]
-    public float breatheMagnitude;
 
     [Header("Ray Adjustments")]
     [Range(0.0f, 1.0f)]
@@ -162,6 +149,7 @@ public class Spider : MonoBehaviour
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
 
         startWalkSpeed = walkSpeed;
         startRunSpeed = runSpeed;
@@ -172,8 +160,6 @@ public class Spider : MonoBehaviour
         {
             Debug.LogWarning("The xyz scales of the Spider are not equal. Please make sure they are. The scale of the spider is defaulted to be the Y scale and a lot of values depend on this scale.");
         }
-
-        rb = GetComponent<Rigidbody>();
 
         //Initialize the two Sphere Casts
         downRayRadius = downRaySize * getColliderRadius();
@@ -221,22 +207,6 @@ public class Spider : MonoBehaviour
         {
             rb.AddForce(-grdInfo.groundNormal * gravityMultiplier * 0.0981f * getScale()); //Important using the groundnormal and not the lerping normal here!
         }
-
-        //if (isSwinging)
-        //{
-        //    Vector3 curVelocity = (transform.position - previousPos) / Time.fixedDeltaTime;
-
-        //    velocity = Vector3.Lerp(velocity, curVelocity, 0.1f);
-
-        //    previousPos = transform.position;
-        //}
-
-        //if (grdInfo.isGrounded && hasSwung)
-        //{
-        //    hasSwung = false;
-
-        //    rb.velocity = Vector3.zero;
-        //}
     }
 
     void Update()
@@ -267,15 +237,6 @@ public class Spider : MonoBehaviour
             float angleZ = Vector3.SignedAngle(Y, Vector3.ProjectOnPlane(newNormal, Z), Z);
             angleZ = Mathf.LerpAngle(0, angleZ, Time.deltaTime * legNormalSpeed);
             body.transform.rotation = Quaternion.AngleAxis(angleZ, Z) * body.transform.rotation;
-        }
-
-        if (breathing)
-        {
-            float t = (Time.time * 2 * Mathf.PI / breathePeriod) % (2 * Mathf.PI);
-            float amplitude = breatheMagnitude * getColliderRadius();
-            Vector3 direction = body.TransformDirection(bodyY);
-
-            body.transform.position = bodyCentroid + amplitude * (Mathf.Sin(t) + 1f) * direction;
         }
 
         // Update the moving status
@@ -321,11 +282,6 @@ public class Spider : MonoBehaviour
         if (IsGrounded())
         {
             rb.AddForce((transform.forward * forwardForce) + (transform.up * upForce));
-
-            //SOUND
-            //spiderJumpSound = FMODUnity.RuntimeManager.CreateInstance("event:/SpiderJump");
-            //spiderJumpSound.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-            //spiderJumpSound.start();
         }
     }
 
@@ -351,7 +307,7 @@ public class Spider : MonoBehaviour
     }
 
     //** Movement methods**//
-
+    #region Movement Methods
     private void move(Vector3 direction, float speed)
     {
 
@@ -413,8 +369,10 @@ public class Spider : MonoBehaviour
 
         move(direction, walkSpeed);
     }
+    #endregion
 
     //** Ground Check Method **//
+    #region Ground Check Mothods
     private groundInfo GroundCheck()
     {
         if (groundCheckOn)
@@ -446,9 +404,10 @@ public class Spider : MonoBehaviour
 
         return false;
     }
+    #endregion
 
     //** Helper methods**//
-
+    #region Helper Methods
     /*
     * Returns the rotation with specified right and up direction   
     * May have to make more error catches here. Whatif not orthogonal?
@@ -523,9 +482,10 @@ public class Spider : MonoBehaviour
         }
         return newNormal;
     }
-
+    #endregion
 
     //** Getters **//
+    #region Getters
     public float getScale()
     {
         return transform.lossyScale.y;
@@ -589,8 +549,10 @@ public class Spider : MonoBehaviour
     {
         return gravityOffDistance * getColliderRadius();
     }
+    #endregion
 
     //** Setters **//
+    #region Setters
     public void setGroundcheck(bool b)
     {
         groundCheckOn = b;
@@ -616,6 +578,7 @@ public class Spider : MonoBehaviour
         DebugShapes.DrawPoint(getLegsCentroid(), Color.red, 0.1f);
         DebugShapes.DrawPoint(getColliderBottomPoint(), Color.cyan, 0.1f);
     }
+    #endregion
 
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()

@@ -55,9 +55,9 @@ MonoBehaviour:
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
-  _disableOnDespawn: 0
+  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 7
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13587879312642905993
@@ -80,7 +80,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 6785665783551630983}
   _networkObjectCache: {fileID: 6785665783551630983}
   spawnedObject: {fileID: 0}
-  playerPrefab: {fileID: 9117857247562382221, guid: ba2e237e87f7f514b9ca58245c66723a,
+  playerPrefab: {fileID: 2059377557813265921, guid: b6779b9e395c9ae4997353b194f6ba8e,
     type: 3}
   spawnOnStart: 1
   spawnWithOwnership: 1

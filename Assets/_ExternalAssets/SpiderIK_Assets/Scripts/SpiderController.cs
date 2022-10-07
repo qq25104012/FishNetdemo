@@ -1,194 +1,278 @@
-﻿///* 
-// * This file is part of Unity-Procedural-IK-Wall-Walking-Spider on github.com/PhilS94
-// * Copyright (C) 2020 Philipp Schofield - All Rights Reserved
-// */
+﻿/* 
+ * This file is part of Unity-Procedural-IK-Wall-Walking-Spider on github.com/PhilS94
+ * Copyright (C) 2020 Philipp Schofield - All Rights Reserved
+ */
 
-//using UnityEngine;
-//using System.Collections;
-//using Raycasting;
-//using UnityEngine.InputSystem;
-//using Photon.Realtime;
-//using Photon.Pun;
-//using ExitGames.Client.Photon;
+using UnityEngine;
+using System.Collections;
+using Raycasting;
+using UnityEngine.InputSystem;
+using FishNet;
+using FishNet.Object;
+using FishNet.Object.Prediction;
 
-///*
-// * This class needs a reference to the Spider class and calls the walk and turn functions depending on player input.
-// * So in essence, this class translates player input to spider movement. The input direction is relative to a camera and so a 
-// * reference to one is needed.
-// */
+/*
+ * This class needs a reference to the Spider class and calls the walk and turn functions depending on player input.
+ * So in essence, this class translates player input to spider movement. The input direction is relative to a camera and so a 
+ * reference to one is needed.
+ */
 
-//[DefaultExecutionOrder(-1)] // Make sure the players input movement is applied before the spider itself will do a ground check and possibly add gravity
-//public class SpiderController : MonoBehaviour
-//{
+[DefaultExecutionOrder(-1)] // Make sure the players input movement is applied before the spider itself will do a ground check and possibly add gravity
+public class SpiderController : NetworkBehaviour
+{
+    #region Types
+    public struct MoveData
+    {
+        public float Horizontal;
+        public float Vertical;
+        public bool Jump;
+        public MoveData(float _horizontal, float _vertical, bool _jump)
+        {
+            Horizontal = _horizontal;
+            Vertical = _vertical;
+            Jump = _jump;
+        }
+    }
+    public struct ReconcileData
+    {
+        public Vector3 Position;
+        public Quaternion Rotation;
+        public Vector3 Velocity;
+        public Vector3 AngularVelocity;
+        public ReconcileData(Vector3 _position, Quaternion _rotation, Vector3 _velocity, Vector3 _angularVelocity)
+        {
+            Position = _position;
+            Rotation = _rotation;
+            Velocity = _velocity;
+            AngularVelocity = _angularVelocity;
+        }
+    }
+    #endregion
 
-//    [Header("Settings")]
+    [Header("Settings")]
+    [SerializeField] float isFallingCheckTime = 0.25f;
 
-//    [SerializeField] float isFallingCheckTime = 0.25f;
+    [SerializeField] private float smoothInputSpeed = 0.2f;
 
-//    [SerializeField] private float smoothInputSpeed = 0.2f;
+    [SerializeField] Spider spider;
 
-//    public Spider spider;
+    [Header("Camera")]
+    public SmoothCamera smoothCam;
 
-//    [Header("Camera")]
-//    public SmoothCamera smoothCam;
+    Vector2 moveInput = Vector2.zero;
+    Vector2 currentInputVector = Vector2.zero;
+    Vector2 smoothInputVelocity = Vector2.zero;
 
-//    [SerializeField] private PhotonView PV;
+    bool isFalling = false;
 
-//    Vector2 moveInput = Vector2.zero;
-//    Vector2 currentInputVector = Vector2.zero;
-//    Vector2 smoothInputVelocity = Vector2.zero;
+    public bool canMove = false;
 
-//    bool isFalling = false;
+    private bool jumpQueued = false;
 
-//    bool canMove = false;
+    private void OnEnable()
+    {
+        EventSystemNew.Subscribe(Event_Type.GAME_STARTED, GameStarted);
+        EventSystemNew.Subscribe(Event_Type.GAME_ENDED, GameEnded);
 
-//    private void OnEnable()
-//    {
-//        EventSystemNew.Subscribe(Event_Type.PRE_GAME, GameStarted);
-//        EventSystemNew.Subscribe(Event_Type.GAME_ENDED, GameEnded);
+        // Input Events
+        EventSystemNew<float, float>.Subscribe(Event_Type.Move, Move);
+        EventSystemNew.Subscribe(Event_Type.Jump, Jump);
+        EventSystemNew<bool>.Subscribe(Event_Type.Fall, Fall);
+        EventSystemNew.Subscribe(Event_Type.ForceRespawn, ForceRespawn);
+    }
 
-//        // Input Events
-//        EventSystemNew<float, float>.Subscribe(Event_Type.Move, Move);
-//        EventSystemNew.Subscribe(Event_Type.Jump, Jump);
-//        EventSystemNew<bool>.Subscribe(Event_Type.Fall, Fall);
-//        EventSystemNew.Subscribe(Event_Type.ForceRespawn, ForceRespawn);
+    private void OnDisable()
+    {
+        EventSystemNew.Unsubscribe(Event_Type.GAME_STARTED, GameStarted);
+        EventSystemNew.Unsubscribe(Event_Type.GAME_ENDED, GameEnded);
 
-//        if (GameManager.Instance.gameStarted || GameManager.Instance.preGame && !GameManager.Instance.gameEnded)
-//        {
-//            canMove = true;
+        // Input Events
+        EventSystemNew<float, float>.Unsubscribe(Event_Type.Move, Move);
+        EventSystemNew.Unsubscribe(Event_Type.Jump, Jump);
+        EventSystemNew<bool>.Unsubscribe(Event_Type.Fall, Fall);
+        EventSystemNew.Unsubscribe(Event_Type.ForceRespawn, ForceRespawn);
+    }
 
-//        }
-//        else if (GameManager.Instance.gameEnded)
-//        {
-//            canMove = false;
+    private void Awake()
+    {
+        InstanceFinder.TimeManager.OnTick += TimeManager_OnTick;
+        InstanceFinder.TimeManager.OnPostTick += TimeManager_OnPostTick;
 
-//            smoothCam.XSensitivity = 0;
-//            smoothCam.YSensitivity = 0;
-//        }
-//    }
+        if (GameState.Instance.gameStarted && !GameState.Instance.gameEnded)
+        {
+            canMove = true;
+        }
+        else if (GameState.Instance.gameEnded)
+        {
+            canMove = false;
 
-//    private void OnDisable()
-//    {
-//        EventSystemNew.Unsubscribe(Event_Type.PRE_GAME, GameStarted);
-//        EventSystemNew.Unsubscribe(Event_Type.GAME_ENDED, GameEnded);
+            smoothCam.XSensitivity = 0;
+            smoothCam.YSensitivity = 0;
+        }
+    }
 
-//        // Input Events
-//        EventSystemNew<float, float>.Unsubscribe(Event_Type.Move, Move);
-//        EventSystemNew.Unsubscribe(Event_Type.Jump, Jump);
-//        EventSystemNew<bool>.Unsubscribe(Event_Type.Fall, Fall);
-//        EventSystemNew.Unsubscribe(Event_Type.ForceRespawn, ForceRespawn);
-//    }
+    private void OnDestroy()
+    {
+        if (InstanceFinder.TimeManager != null)
+        {
+            InstanceFinder.TimeManager.OnTick -= TimeManager_OnTick;
+            InstanceFinder.TimeManager.OnPostTick -= TimeManager_OnPostTick;
+        }
+    }
 
-//    void FixedUpdate()
-//    {
-//        //** Movement **//
-//        Vector3 input = getInput();
+    void FixedUpdate()
+    {
+        if (isFalling)
+        {
+            if (spider.GroundCheckFalling())
+            {
+                isFalling = false;
 
-//        spider.walk(input, moveInput);
+                spider.setGroundcheck(true);
 
-//        Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
-//        Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
-//        spider.turn(input, moveInput);
-//        smoothCam.setTargetRotation(tempCamTargetRotation);
-//        smoothCam.setTargetPosition(tempCamTargetPosition);
+                CancelInvoke();
+            }
+        }
+    }
 
-//        if (isFalling)
-//        {
-//            if (spider.GroundCheckFalling())
-//            {
-//                isFalling = false;
+    private void TimeManager_OnTick()
+    {
+        if (base.IsOwner)
+        {
+            Reconciliation(default, false);
+            CheckInput(out MoveData md);
+            Move(md, false);
+        }
+        if (base.IsServer)
+        {
+            Move(default, true);
+        }
+    }
 
-//                spider.setGroundcheck(true);
+    private void TimeManager_OnPostTick()
+    {
+        if (base.IsServer)
+        {
+            ReconcileData rd = new ReconcileData(transform.position, transform.rotation, spider.rb.velocity, spider.rb.angularVelocity);
+            Reconciliation(rd, true);
+        }
+    }
 
-//                CancelInvoke();
-//            }
-//        }
-//    }
+    private void CheckInput(out MoveData md)
+    {
+        md = default;
 
-//    private Vector3 getInput()
-//    {
-//        if (canMove)
-//        {
-//            currentInputVector = Vector2.SmoothDamp(currentInputVector, moveInput, ref smoothInputVelocity, smoothInputSpeed);
+        md = new MoveData(moveInput.x, moveInput.y, jumpQueued);
+        jumpQueued = false;
+    }
 
-//            Vector3 up = spider.transform.up;
-//            Vector3 right = spider.transform.right;
-//            Vector3 input = Vector3.ProjectOnPlane(smoothCam.getCameraTarget().forward, up).normalized * currentInputVector.y + (Vector3.ProjectOnPlane(smoothCam.getCameraTarget().right, up).normalized * currentInputVector.x);
-//            Quaternion fromTo = Quaternion.AngleAxis(Vector3.SignedAngle(up, spider.getGroundNormal(), right), right);
-//            input = fromTo * input;
-//            float magnitude = input.magnitude;
-//            return (magnitude <= 1) ? input : input /= magnitude;
-//        }
+    [Replicate]
+    private void Move(MoveData md, bool asServer, bool replaying = false)
+    {
+        //** Movement **//
+        Vector3 input = getInput();
+        spider.walk(input, moveInput);
+        Debug.Log("MoveInput: " + moveInput);
 
-//        return Vector3.zero;
-//    }
+        Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
+        Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
+        spider.turn(input, moveInput);
+        smoothCam.setTargetRotation(tempCamTargetRotation);
+        smoothCam.setTargetPosition(tempCamTargetPosition);
 
-//    #region Input Events
-//    private void Move(float _x, float _y)
-//    {
-//        if (!canMove)
-//        {
-//            return;
-//        }
+        if (md.Jump)
+            spider.Jump();
+    }
 
-//        moveInput = new Vector2(_x, _y);
-//    }
+    [Reconcile]
+    private void Reconciliation(ReconcileData rd, bool asServer)
+    {
+        transform.position = rd.Position;
+        transform.rotation = rd.Rotation;
+        spider.rb.velocity = rd.Velocity;
+        spider.rb.angularVelocity = rd.AngularVelocity;
+    }
 
-//    private void Jump()
-//    {
-//        if (!canMove)
-//        {
-//            return;
-//        }
+    private Vector3 getInput()
+    {
+        if (canMove)
+        {
+            currentInputVector = Vector2.SmoothDamp(currentInputVector, moveInput, ref smoothInputVelocity, smoothInputSpeed);
 
-//        spider.Jump();
-//    }
+            Vector3 up = spider.transform.up;
+            Vector3 right = spider.transform.right;
+            Vector3 input = Vector3.ProjectOnPlane(smoothCam.getCameraTarget().forward, up).normalized * currentInputVector.y + (Vector3.ProjectOnPlane(smoothCam.getCameraTarget().right, up).normalized * currentInputVector.x);
+            Quaternion fromTo = Quaternion.AngleAxis(Vector3.SignedAngle(up, spider.getGroundNormal(), right), right);
+            input = fromTo * input;
+            float magnitude = input.magnitude;
+            return (magnitude <= 1) ? input : input /= magnitude;
+        }
 
-//    private void Fall(bool _isFalling)
-//    {
-//        if (!canMove)
-//        {
-//            return;
-//        }
+        return Vector3.zero;
+    }
 
-//        if (_isFalling && spider.IsGrounded())
-//        {
-//            Invoke("SetFalling", isFallingCheckTime);
+    #region Input Events
+    private void Move(float _x, float _y)
+    {
+        if (!canMove)
+        {
+            return;
+        }
 
-//            spider.setGroundcheck(false);
-//        }
-//        else if (!_isFalling)
-//        {
-//            isFalling = false;
+        moveInput = new Vector2(_x, _y);
+    }
 
-//            spider.setGroundcheck(true);
+    private void Jump()
+    {
+        if (!canMove)
+        {
+            return;
+        }
 
-//            CancelInvoke();
-//        }
-//    }
+        spider.Jump();
+    }
 
-//    private void ForceRespawn()
-//    {
-//        object[] content = new object[] { PV.ViewID, false };
+    private void Fall(bool _isFalling)
+    {
+        if (!canMove)
+        {
+            return;
+        }
 
-//        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        if (_isFalling && spider.IsGrounded())
+        {
+            Invoke("SetFalling", isFallingCheckTime);
 
-//        PhotonNetwork.RaiseEvent((int)Event_Code.DestroySpider, content, raiseEventOptions, SendOptions.SendReliable);
-//    }
-//    #endregion
+            spider.setGroundcheck(false);
+        }
+        else if (!_isFalling)
+        {
+            isFalling = false;
 
-//    private void SetFalling()
-//    {
-//        isFalling = true;
-//    }
+            spider.setGroundcheck(true);
 
-//    private void GameStarted()
-//    {
-//        canMove = true;
-//    }
+            CancelInvoke();
+        }
+    }
 
-//    private void GameEnded()
-//    {
-//        canMove = false;
-//    }
-//}
+    private void ForceRespawn()
+    {
+        EventSystemNew.RaiseEvent(Event_Type.Respawn_Player);
+    }
+    #endregion
+
+    private void SetFalling()
+    {
+        isFalling = true;
+    }
+
+    private void GameStarted()
+    {
+        canMove = true;
+    }
+
+    private void GameEnded()
+    {
+        canMove = false;
+    }
+}

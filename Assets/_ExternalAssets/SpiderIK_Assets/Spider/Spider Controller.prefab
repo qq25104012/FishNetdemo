@@ -3546,11 +3546,10 @@ GameObject:
   - component: {fileID: 8634589293312570788}
   - component: {fileID: 6602444994393196865}
   - component: {fileID: 7405883807623348973}
-  - component: {fileID: 4420984276067213066}
-  - component: {fileID: 781170031434484630}
   - component: {fileID: 5356263202611163170}
   - component: {fileID: 8634589293312570790}
   - component: {fileID: 2058039777}
+  - component: {fileID: 4674126605945963750}
   m_Layer: 31
   m_Name: Spider Controller
   m_TagString: Untagged
@@ -3588,11 +3587,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a17a1cdc778704d81c6704c2446b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  forwardForce: 1
+  upForce: 1
   showDebug: 0
   walkSpeed: 2
   runSpeed: 3
   turnSpeed: 2
   walkDrag: 0.9
+  stopMagnitude: 0
   capsuleCollider: {fileID: 2058039777}
   gravityMultiplier: 2
   groundNormalAdjustSpeed: 6
@@ -3619,9 +3622,6 @@ MonoBehaviour:
   legNormalAdjustment: 1
   legNormalSpeed: 10
   legNormalWeight: 0.1
-  breathing: 1
-  breathePeriod: 10
-  breatheMagnitude: 0.1
   forwardRayLength: 0.4
   downRayLength: 1
   forwardRaySize: 0.99
@@ -3638,38 +3638,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b1bd60ef88c1ed438303b2c93781015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 4674126605945963750}
+  _networkObjectCache: {fileID: 4674126605945963750}
+  isFallingCheckTime: 0.25
+  smoothInputSpeed: 0.2
   spider: {fileID: 6602444994393196865}
   smoothCam: {fileID: 308868170}
---- !u!114 &4420984276067213066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8634589293312570784}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8be82a173e695a84cab101f570c93650, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebug: 0
-  spider: {fileID: 6602444994393196865}
---- !u!114 &781170031434484630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8634589293312570784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3dc6da212507ad49bb1809e593878b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spiderController: {fileID: 7405883807623348973}
-  spiderNPC: {fileID: 4420984276067213066}
-  controllerCam: {fileID: 8634589293613505105}
-  npcCam: {fileID: 8242045463044528566}
+  canMove: 0
 --- !u!114 &5356263202611163170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3738,6 +3714,33 @@ CapsuleCollider:
   m_Height: 0.022
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4674126605945963750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634589293312570784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  _networkBehaviours:
+  - {fileID: 7405883807623348973}
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  _isNetworked: 1
+  _isGlobal: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: -1
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 9262477122375144863
+  _sceneNetworkObjects: []
 --- !u!1 &8634589293442604250
 GameObject:
   m_ObjectHideFlags: 0

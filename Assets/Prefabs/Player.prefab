@@ -33,6 +33,7 @@ Transform:
   - {fileID: 3975961344116643091}
   - {fileID: 1583007676307647624}
   - {fileID: 6606008877896004750}
+  - {fileID: 507147458102795399}
   m_Father: {fileID: 9117857247562382215}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -666,6 +667,37 @@ Transform:
   m_Father: {fileID: 8274935638305073705}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4245496567963612987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 507147458102795399}
+  m_Layer: 0
+  m_Name: RopeStartPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &507147458102795399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4245496567963612987}
+  m_LocalRotation: {x: -0.4110858, y: -0, z: -0, w: 0.91159666}
+  m_LocalPosition: {x: 0, y: 1.07, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8274935638305073705}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: -48.546, y: 0, z: 0}
 --- !u!1 &5227228114914271230
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,6 +882,8 @@ GameObject:
   - component: {fileID: -4505470967124097918}
   - component: {fileID: 5841794604906695400}
   - component: {fileID: -1197031805555222620}
+  - component: {fileID: 1967232064983545685}
+  - component: {fileID: 8088852140818784659}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -940,11 +974,12 @@ MonoBehaviour:
   - {fileID: -4505470967124097918}
   - {fileID: 5841794604906695400}
   - {fileID: -1197031805555222620}
+  - {fileID: 1967232064983545685}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
-  _disableOnDespawn: 0
+  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   <PrefabId>k__BackingField: 0
   _scenePathHash: 0
@@ -1163,6 +1198,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c68385ad-677c-4d5c-9b69-bb9317fd0fa4
     m_ActionName: UI/Navigate (Controller)[/DualShock4GamepadHID/leftStick/down,/DualShock4GamepadHID/rightStick/down,/DualShock4GamepadHID/leftStick/right,/DualShock4GamepadHID/rightStick/right,/DualShock4GamepadHID/dpad/down,/DualShock4GamepadHID/dpad/right,/Keyboard/downArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8088852140818784659}
+        m_TargetAssemblyTypeName: SpiderInputHandler, Assembly-CSharp
+        m_MethodName: OnSwingInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 45a23e34-8ced-4d07-b74b-169a46e1a800
+    m_ActionName: PlayerControls/Swing[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerControls
@@ -1245,3 +1296,48 @@ MonoBehaviour:
   - {fileID: 5227228114914271230}
   - {fileID: 2968875564188385279}
   - {fileID: 5897528077697835201}
+--- !u!114 &1967232064983545685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117857247562382221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bffc1017359fb24da72936bce61f689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 7
+  _addedNetworkObject: {fileID: 9117857247562382210}
+  _networkObjectCache: {fileID: 9117857247562382210}
+  forwardForce: 1
+  upwardForce: 1
+  cam: {fileID: 6870619967636314228}
+  raycastLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  maxDistance: 5
+  target: {fileID: 9117857247562382215}
+  spiderScript: {fileID: 0}
+  spherePrefab: {fileID: 6468403811931857091, guid: bbf6d07ac7238664992d6e6ab977d2b6,
+    type: 3}
+  endPointPrefab: {fileID: 2093314282813944497, guid: bc3830c3ec8f8bd4e93fe667f268c4f4,
+    type: 3}
+  startPoint: {fileID: 507147458102795399}
+  amountOfPointsOffset: 0
+  ropeOffset: {x: 0, y: 0, z: 0}
+  ropeSize: 0.25
+  distanceBetweenPoints: 1
+--- !u!114 &8088852140818784659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9117857247562382221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4ae89f46c2f1a04591392ed5ffd9979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

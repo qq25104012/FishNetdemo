@@ -1,71 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FishNet;
+using FishNet.Object;
 
-public class RopeGenerator : MonoBehaviour
+public class RopeGenerator : NetworkBehaviour
 {
-    [SerializeField] float forwardForce = 1;
-    [SerializeField] float upwardForce = 1f;
+    [SerializeField] private float forwardForce = 1;
+    [SerializeField] private float upwardForce = 1f;
 
-    [SerializeField] Camera cam;
-
-    [SerializeField] string spherePrefabName;
+    [SerializeField] private Camera cam;
 
     [Header("Raycast Settings")]
 
-    [SerializeField] LayerMask raycastLayers;
+    [SerializeField] private LayerMask raycastLayers;
 
-    [SerializeField] float maxDistance = 1f;
+    [SerializeField] private float maxDistance = 1f;
 
     [Header("Rope Settings")]
 
-    [SerializeField] Transform target;
+    [SerializeField] private Transform target;
 
-    [SerializeField] Spider spiderScript;
+    [SerializeField] private Spider spiderScript;
 
-    [SerializeField] GameObject spherePrefab;
+    [SerializeField] private GameObject spherePrefab;
+    [SerializeField] private GameObject endPointPrefab;
 
-    [SerializeField] Transform startPoint;
+    [SerializeField] private Transform startPoint;
 
-    [SerializeField] int amountOfPointsOffset = 0;
+    [SerializeField] private int amountOfPointsOffset = 0;
 
-    [SerializeField] Vector3 ropeOffset = Vector3.zero;
+    [SerializeField] private Vector3 ropeOffset = Vector3.zero;
 
-    [SerializeField] float ropeSize = 0.25f;
+    [SerializeField] private float ropeSize = 0.25f;
 
-    [SerializeField] float distanceBetweenPoints = 1f;
+    [SerializeField] private float distanceBetweenPoints = 1f;
 
-    List<GameObject> ropePoints = new List<GameObject>();
+    private List<GameObject> ropePoints = new List<GameObject>();
 
-    List<GameObject> endPoints = new List<GameObject>();
+    private GameObject endPoint;
 
-    Rigidbody lastRopePointRB;
+    private Rigidbody lastRopePointRB;
 
-    Vector3 instantiatePosition;
+    private Vector3 instantiatePosition;
 
-    float lerpValue = 0f;
+    private float lerpValue = 0f;
 
-    float lerpDistanceToAdd = 0f;
+    private float lerpDistanceToAdd = 0f;
 
-    bool canSwing = true;
+    private bool canSwing = true;
 
-    bool isCurrentlySwinging = false;
+    private bool isCurrentlySwinging = false;
 
-    bool isForwardPressed = false;
+    private bool isForwardPressed = false;
 
-    bool canMove = false;
+    private bool canMove = false;
 
     private void OnEnable()
     {
         EventSystemNew.Subscribe(Event_Type.COLLIDED, DestroyRope);
-        EventSystemNew.Subscribe(Event_Type.PRE_GAME, GameStarted);
+        EventSystemNew.Subscribe(Event_Type.GAME_STARTED, GameStarted);
         EventSystemNew.Subscribe(Event_Type.GAME_ENDED, GameEnded);
 
         // Input Events
         EventSystemNew<bool>.Subscribe(Event_Type.Swing, Swing);
         EventSystemNew<bool>.Subscribe(Event_Type.RopeForward, RopeForwardState);
 
-        if (GameManager.Instance.gameStarted && !GameManager.Instance.gameEnded)
+        if (GameState.Instance.gameStarted && !GameState.Instance.gameEnded)
         {
             canMove = true;
         }
@@ -78,7 +79,7 @@ public class RopeGenerator : MonoBehaviour
     private void OnDisable()
     {
         EventSystemNew.Unsubscribe(Event_Type.COLLIDED, DestroyRope);
-        EventSystemNew.Unsubscribe(Event_Type.PRE_GAME, GameStarted);
+        EventSystemNew.Unsubscribe(Event_Type.GAME_STARTED, GameStarted);
         EventSystemNew.Unsubscribe(Event_Type.GAME_ENDED, GameEnded);
 
         // Input Events
@@ -88,24 +89,22 @@ public class RopeGenerator : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (endPoints.Count > 0)
+        if (!IsServer) return;
+
+        if (endPoint != null)
         {
             foreach (var ropePoint in ropePoints)
             {
-                PhotonNetwork.Destroy(ropePoint);
+                InstanceFinder.ServerManager.Despawn(ropePoint);
             }
 
-            foreach (var endPoint in endPoints)
-            {
-                PhotonNetwork.Destroy(endPoint);
-            }
+            InstanceFinder.ServerManager.Despawn(endPoint);
         }
     }
 
     private void Update()
     {
-        if (!PV.IsMine)
-            return;
+        if (!IsServer) return;
 
         if (!canMove)
         {
@@ -120,18 +119,15 @@ public class RopeGenerator : MonoBehaviour
 
     private void Swing(bool _isSwinging)
     {
-        if (!PV.IsMine)
+        if (_isSwinging && canSwing && spiderScript.IsGrounded())
         {
-            return;
-        }
+            Debug.Log("SWING");
 
-        if (_isSwinging && canSwing && !spiderScript.IsGrounded())
-        {
             canSwing = false;
 
             RaycastRope();
         }
-        else if (!_isSwinging && endPoints.Count > 0)
+        else if (!_isSwinging && endPoint != null)
         {
             DestroyRope();
         }
@@ -139,28 +135,19 @@ public class RopeGenerator : MonoBehaviour
 
     private void RopeForwardState(bool _isPressed)
     {
-        if (!PV.IsMine)
-        {
-            return;
-        }
-
         isForwardPressed = _isPressed;
     }
 
     private void DestroyRope()
     {
-        if (!PV.IsMine)
-            return;
+        if (!IsServer) return;
 
         EventSystemNew<bool>.RaiseEvent(Event_Type.IS_SWINGING, false);
 
-        PV.RPC("RPC_SyncTarget", RpcTarget.All, target.GetComponent<PhotonView>().ViewID, false);
-        PV.RPC("RPC_UnParentTarget", RpcTarget.All, target.GetComponent<PhotonView>().ViewID);
+        target.GetComponent<Rigidbody>().isKinematic = false;
+        target.transform.SetParent(null);
 
         StartCoroutine(DeleteRope());
-
-        //SOUND
-        spiderHangSound.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         isCurrentlySwinging = false;
     }
@@ -181,24 +168,16 @@ public class RopeGenerator : MonoBehaviour
 
     private void GenerateRope(Vector3 _endPointTransform)
     {
-        //SOUND
-        spiderPullSound = FMODUnity.RuntimeManager.CreateInstance("event:/SpiderPull");
-        spiderPullSound.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-        spiderPullSound.start();
-        spiderHangSound = FMODUnity.RuntimeManager.CreateInstance("event:/SpiderHang");
-        spiderHangSound.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-        spiderHangSound.start();
+        if (!IsServer) return;
 
         // Rope Generation End to Start
-
         Vector3 newEndPointTransform = _endPointTransform + ropeOffset;
 
         EventSystemNew<bool>.RaiseEvent(Event_Type.IS_SWINGING, true);
 
         // Create an endpoint to attach the joint to
-        GameObject endPoint = PhotonNetwork.Instantiate("EndPoint", newEndPointTransform, Quaternion.identity);
-
-        endPoints.Add(endPoint);
+        GameObject endPoint = Instantiate(endPointPrefab, newEndPointTransform, Quaternion.identity);
+        Spawn(endPoint);
 
         lerpValue = 0f;
 
@@ -216,15 +195,18 @@ public class RopeGenerator : MonoBehaviour
         {
             instantiatePosition = Vector3.Lerp(endPoint.transform.position, startPoint.position, lerpValue);
 
-            GameObject ropePoint = PhotonNetwork.Instantiate(spherePrefabName, instantiatePosition, Quaternion.identity);
+            GameObject ropePoint = Instantiate(spherePrefab, instantiatePosition, Quaternion.identity);
+            Spawn(ropePoint);
+
+            ropePoint.transform.localScale = new Vector3(ropeSize, ropeSize, ropeSize);
 
             if (i == 0)
             {
-                PV.RPC("RPC_SyncRopePoint", RpcTarget.All, ropePoint.GetComponent<PhotonView>().ViewID, endPoint.GetComponent<PhotonView>().ViewID, ropeSize);
+                ropePoint.GetComponent<HingeJoint>().connectedBody = endPoint.GetComponent<Rigidbody>();
             }
             else
             {
-                PV.RPC("RPC_SyncRopePoint", RpcTarget.All, ropePoint.GetComponent<PhotonView>().ViewID, ropePoints[i - 1].GetComponent<PhotonView>().ViewID, ropeSize);
+                ropePoint.GetComponent<HingeJoint>().connectedBody = ropePoints[i - 1].GetComponent<Rigidbody>();
             }
 
             // i == amountOfPoints - 1
@@ -232,7 +214,10 @@ public class RopeGenerator : MonoBehaviour
             {
                 lastRopePointRB = ropePoint.GetComponent<Rigidbody>();
 
-                PV.RPC("RPC_ParentTarget", RpcTarget.All, target.GetComponent<PhotonView>().ViewID, ropePoint.GetComponent<PhotonView>().ViewID, ropeSize);
+                ropePoint.transform.localScale = new Vector3(ropeSize, ropeSize, ropeSize);
+
+                target.SetParent(ropePoint.transform);
+                target.GetComponent<Rigidbody>().isKinematic = true;
             }
 
             ropePoints.Add(ropePoint);
@@ -243,63 +228,18 @@ public class RopeGenerator : MonoBehaviour
         isCurrentlySwinging = true;
     }
 
-    [PunRPC]
-    public void RPC_SyncRopePoint(int _ropePointID, int _otherRopePointID, float _ropeSize)
-    {
-        Transform ropePoint = PhotonView.Find(_ropePointID).transform;
-        Transform otherRopePoint = PhotonView.Find(_otherRopePointID).transform;
-
-        ropePoint.transform.localScale = new Vector3(_ropeSize, _ropeSize, _ropeSize);
-
-        ropePoint.GetComponent<HingeJoint>().connectedBody = otherRopePoint.GetComponent<Rigidbody>();
-    }
-
-    [PunRPC]
-    public void RPC_SyncTarget(int _targetID, bool _isKinematic)
-    {
-        PhotonView.Find(_targetID).GetComponent<Rigidbody>().isKinematic = _isKinematic;
-    }
-
-    [PunRPC]
-    public void RPC_ParentTarget(int _targetID, int _ropePointID, float _ropeSize)
-    {
-        Transform target = PhotonView.Find(_targetID).transform;
-        Transform ropePoint = PhotonView.Find(_ropePointID).transform;
-
-        ropePoint.transform.localScale = new Vector3(_ropeSize, _ropeSize, _ropeSize);
-
-        target.SetParent(ropePoint);
-        target.GetComponent<Rigidbody>().isKinematic = true;
-    }
-
-    [PunRPC]
-    public void RPC_UnParentTarget(int _targetID)
-    {
-        PhotonView.Find(_targetID).transform.SetParent(null);
-
-        if (PV.IsMine)
-        {
-            StartCoroutine(DeleteRope());
-        }
-    }
-
     private IEnumerator DeleteRope()
     {
         yield return new WaitForSeconds(0.25f);
 
         foreach (var ropePoint in ropePoints)
         {
-            PhotonNetwork.Destroy(ropePoint);
+            InstanceFinder.ServerManager.Despawn(ropePoint);
         }
 
-        foreach (var endPoint in endPoints)
-        {
-            PhotonNetwork.Destroy(endPoint);
-        }
+        InstanceFinder.ServerManager.Despawn(endPoint);
 
         ropePoints.Clear();
-
-        endPoints.Clear();
 
         yield return new WaitForSeconds(0.25f);
 
