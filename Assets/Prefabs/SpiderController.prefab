@@ -3163,7 +3163,7 @@ MonoBehaviour:
   - {fileID: 1688583191561219573}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField:
-  - {fileID: 7327556383697819206}
+  - {fileID: 0}
   _isNetworked: 1
   _isGlobal: 0
   _defaultDespawnType: 0
@@ -5773,7 +5773,6 @@ GameObject:
   - component: {fileID: 4249958589078869507}
   - component: {fileID: 86148134413693067}
   - component: {fileID: 5748013684983924865}
-  - component: {fileID: 7327556383697819206}
   m_Layer: 0
   m_Name: SpiderInputHandler
   m_TagString: Untagged
@@ -5809,8 +5808,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 7327556383697819206}
-  _networkObjectCache: {fileID: 7327556383697819206}
+  _addedNetworkObject: {fileID: 1062214073479057588}
+  _networkObjectCache: {fileID: 0}
 --- !u!114 &5748013684983924865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5942,33 +5941,6 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerControls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7327556383697819206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8971074208879146544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 1
-  <ComponentIndex>k__BackingField: 1
-  _networkBehaviours:
-  - {fileID: 86148134413693067}
-  <ParentNetworkObject>k__BackingField: {fileID: 1062214073479057588}
-  <ChildNetworkObjects>k__BackingField: []
-  _isNetworked: 1
-  _isGlobal: 0
-  _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: -1
-  _scenePathHash: 0
-  <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 0
-  _sceneNetworkObjects: []
 --- !u!1 &9165235853181729526
 GameObject:
   m_ObjectHideFlags: 0
