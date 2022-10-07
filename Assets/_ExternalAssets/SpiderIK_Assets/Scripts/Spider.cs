@@ -153,7 +153,10 @@ public class Spider : NetworkBehaviour
         base.OnStartClient();
 
         if (!IsOwner || !IsServer) return;
+    }
 
+    private void Awake()
+    {
         rb = GetComponent<Rigidbody>();
 
         startWalkSpeed = walkSpeed;
@@ -181,8 +184,6 @@ public class Spider : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!IsOwner) return;
-
         //** Ground Check **//
         grdInfo = GroundCheck();
 
@@ -218,8 +219,6 @@ public class Spider : NetworkBehaviour
 
     void Update()
     {
-        if (!IsOwner) return;
-
         //** Debug **//
         if (showDebug) drawDebug();
 
