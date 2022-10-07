@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Raycasting;
 using UnityEngine.InputSystem;
+using FishNet.Object;
 
 /*
  * This class represents the actual spider. It is responsible for "glueing" it to the surfaces around it. This is accomplished by
@@ -21,7 +22,7 @@ using UnityEngine.InputSystem;
  */
 
 [DefaultExecutionOrder(0)] // Any controller of this spider should have default execution -1
-public class Spider : MonoBehaviour
+public class Spider : NetworkBehaviour
 {
     [SerializeField] Animator animator;
 
@@ -147,8 +148,12 @@ public class Spider : MonoBehaviour
         EventSystemNew<bool>.Unsubscribe(Event_Type.IS_SWINGING, IsSwinging);
     }
 
-    private void Awake()
+    public override void OnStartClient()
     {
+        base.OnStartClient();
+
+        if (!IsOwner || !IsServer) return;
+
         rb = GetComponent<Rigidbody>();
 
         startWalkSpeed = walkSpeed;
@@ -176,6 +181,8 @@ public class Spider : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         //** Ground Check **//
         grdInfo = GroundCheck();
 
@@ -211,6 +218,8 @@ public class Spider : MonoBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
+
         //** Debug **//
         if (showDebug) drawDebug();
 

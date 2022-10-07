@@ -122,6 +122,8 @@ public class SpiderController : NetworkBehaviour
 
     void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         if (isFalling)
         {
             if (spider.GroundCheckFalling())
