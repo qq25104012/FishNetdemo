@@ -1,18 +1,32 @@
+using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SpiderInputHandler : MonoBehaviour
+public class SpiderInputHandler : NetworkBehaviour
 {
+    [SerializeField] private PlayerInput input;
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        input.enabled = (base.IsOwner);
+    }
+
     public void OnMoveInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         Vector2 input = _context.ReadValue<Vector2>();
         EventSystemNew<float, float>.RaiseEvent(Event_Type.Move, input.x, input.y);
     }
 
     public void OnJumpInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew.RaiseEvent(Event_Type.Jump);
@@ -21,6 +35,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnShootInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew.RaiseEvent(Event_Type.Shoot);
@@ -29,6 +45,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnSwingInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew<bool>.RaiseEvent(Event_Type.Swing, true);
@@ -41,6 +59,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnFallInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew<bool>.RaiseEvent(Event_Type.Fall, true);
@@ -53,6 +73,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnChangeSpectatorInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             float value = _context.ReadValue<Vector2>().x;
@@ -63,6 +85,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnForceRespawnInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew.RaiseEvent(Event_Type.ForceRespawn);
@@ -71,6 +95,8 @@ public class SpiderInputHandler : MonoBehaviour
 
     public void OnRopeForwardInput(InputAction.CallbackContext _context)
     {
+        if (!IsOwner) return;
+
         if (_context.phase == InputActionPhase.Started)
         {
             EventSystemNew<bool>.RaiseEvent(Event_Type.RopeForward, true);

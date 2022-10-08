@@ -2981,6 +2981,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a17a1cdc778704d81c6704c2446b6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 1062214073479057588}
+  _networkObjectCache: {fileID: 1062214073479057588}
   animator: {fileID: 4191387137409005149}
   forwardForce: 75
   upForce: 100
@@ -3032,7 +3035,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b1bd60ef88c1ed438303b2c93781015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 1062214073479057588}
   _networkObjectCache: {fileID: 1062214073479057588}
   isFallingCheckTime: 0.25
@@ -3106,7 +3109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bffc1017359fb24da72936bce61f689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 1062214073479057588}
   _networkObjectCache: {fileID: 1062214073479057588}
   forwardForce: 1.5
@@ -3156,14 +3159,15 @@ MonoBehaviour:
   <IsNested>k__BackingField: 0
   <ComponentIndex>k__BackingField: 0
   _networkBehaviours:
+  - {fileID: 3522027600439065312}
   - {fileID: 974648722269106508}
   - {fileID: 2589912353427137587}
   - {fileID: 1378623797644235040}
   - {fileID: 5355473968789170365}
   - {fileID: 1688583191561219573}
+  - {fileID: 86148134413693067}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField:
-  - {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
   _isNetworked: 1
   _isGlobal: 0
   _defaultDespawnType: 0
@@ -3185,7 +3189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 1062214073479057588}
   _networkObjectCache: {fileID: 1062214073479057588}
   _synchronizeParent: 0
@@ -3227,7 +3231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402926ef33e0a894d9fec352693988ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 1062214073479057588}
   _networkObjectCache: {fileID: 1062214073479057588}
   _graphicalObject: {fileID: 7839325154421926951}
@@ -3253,11 +3257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 482176a707770da42b746a371e160c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 1062214073479057588}
   _networkObjectCache: {fileID: 1062214073479057588}
   objectsToDisableForOthers:
-  - {fileID: 8971074208879146544}
   - {fileID: 2059377558581881331}
   componentsToDisableForOthers: []
   objectsToDisableForOwn: []
@@ -5773,6 +5776,7 @@ GameObject:
   - component: {fileID: 4249958589078869507}
   - component: {fileID: 86148134413693067}
   - component: {fileID: 5748013684983924865}
+  - component: {fileID: 2285853065202768310}
   m_Layer: 0
   m_Name: SpiderInputHandler
   m_TagString: Untagged
@@ -5807,9 +5811,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4ae89f46c2f1a04591392ed5ffd9979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 1062214073479057588}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1062214073479057588}
+  input: {fileID: 5748013684983924865}
 --- !u!114 &5748013684983924865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5941,6 +5946,32 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerControls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2285853065202768310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971074208879146544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 1
+  <ComponentIndex>k__BackingField: 0
+  _networkBehaviours: []
+  <ParentNetworkObject>k__BackingField: {fileID: 0}
+  <ChildNetworkObjects>k__BackingField: []
+  _isNetworked: 1
+  _isGlobal: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  <PrefabId>k__BackingField: -1
+  _scenePathHash: 0
+  <SceneId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  _sceneNetworkObjects: []
 --- !u!1 &9165235853181729526
 GameObject:
   m_ObjectHideFlags: 0
