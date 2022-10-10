@@ -177,13 +177,16 @@ public class SpiderController : NetworkBehaviour
     {
         //** Movement **//
         spider.walk(md.Input, moveInput);
-        Debug.Log("MoveInput: " + moveInput);
 
-        Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
-        Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
+        if (IsOwner)
+        {
+            Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
+            Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
+            smoothCam.setTargetRotation(tempCamTargetRotation);
+            smoothCam.setTargetPosition(tempCamTargetPosition);
+        }
+
         spider.turn(md.Input, moveInput);
-        smoothCam.setTargetRotation(tempCamTargetRotation);
-        smoothCam.setTargetPosition(tempCamTargetPosition);
 
         if (md.Jump)
             spider.Jump();
