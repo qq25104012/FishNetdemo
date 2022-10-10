@@ -23,11 +23,13 @@ public class SpiderController : NetworkBehaviour
     #region Types
     public struct MoveData
     {
+        public Vector3 Input;
         public float Horizontal;
         public float Vertical;
         public bool Jump;
-        public MoveData(float _horizontal, float _vertical, bool _jump)
+        public MoveData(Vector3 _input, float _horizontal, float _vertical, bool _jump)
         {
+            Input = _input;
             Horizontal = _horizontal;
             Vertical = _vertical;
             Jump = _jump;
@@ -164,7 +166,9 @@ public class SpiderController : NetworkBehaviour
     {
         md = default;
 
-        md = new MoveData(moveInput.x, moveInput.y, jumpQueued);
+        Vector3 input = getInput();
+
+        md = new MoveData(input, moveInput.x, moveInput.y, jumpQueued);
         jumpQueued = false;
     }
 
@@ -172,13 +176,12 @@ public class SpiderController : NetworkBehaviour
     private void Move(MoveData md, bool asServer, bool replaying = false)
     {
         //** Movement **//
-        Vector3 input = getInput();
-        spider.walk(input, moveInput);
+        spider.walk(md.Input, moveInput);
         Debug.Log("MoveInput: " + moveInput);
 
         Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
         Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
-        spider.turn(input, moveInput);
+        spider.turn(md.Input, moveInput);
         smoothCam.setTargetRotation(tempCamTargetRotation);
         smoothCam.setTargetPosition(tempCamTargetPosition);
 

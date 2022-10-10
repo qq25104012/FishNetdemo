@@ -386,7 +386,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 382605045}
   _networkObjectCache: {fileID: 382605045}
-  spectate_HUD: {fileID: 0}
+  spectate_HUD: {fileID: 2142672218}
   playerWon_HUD_NonVR: {fileID: 0}
   playerWon_HUD_VR: {fileID: 0}
   playerWon_Text_NonVR: {fileID: 0}
@@ -815,7 +815,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
@@ -1141,7 +1140,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
@@ -1192,7 +1190,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
@@ -1238,6 +1235,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4092479291638261077, guid: cc86fb3e6973d894faa0e453e6feb9f2,
+        type: 3}
+      propertyPath: Transport
+      value: 
+      objectReference: {fileID: 699896216}
     - target: {fileID: 6883511005393878320, guid: cc86fb3e6973d894faa0e453e6feb9f2,
         type: 3}
       propertyPath: _spawnablePrefabs
@@ -1309,7 +1311,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4092479291638261086, guid: cc86fb3e6973d894faa0e453e6feb9f2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cc86fb3e6973d894faa0e453e6feb9f2, type: 3}
 --- !u!1 &699896210 stripped
 GameObject:
@@ -1333,6 +1336,18 @@ MonoBehaviour:
     type: 3}
   _addToDefaultScene: 1
   Spawns: []
+--- !u!114 &699896216 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4092479292390809623, guid: cc86fb3e6973d894faa0e453e6feb9f2,
+    type: 3}
+  m_PrefabInstance: {fileID: 699896209}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699896210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f48f002b825cbd45a19bd96d90f9edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &717774015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2072,7 +2087,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
@@ -2258,7 +2272,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
@@ -2790,7 +2803,6 @@ MonoBehaviour:
   _sceneNetworkObjects:
   - {fileID: 382605045}
   - {fileID: 602185888}
-  - {fileID: 636875978}
   - {fileID: 1233371665}
   - {fileID: 1310730237}
   - {fileID: 1693427078}
