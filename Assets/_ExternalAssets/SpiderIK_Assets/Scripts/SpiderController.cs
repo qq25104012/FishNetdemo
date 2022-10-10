@@ -26,25 +26,25 @@ public class SpiderController : NetworkBehaviour
         public Vector3 Input;
         public float Horizontal;
         public float Vertical;
+        public Quaternion Rotation;
         public bool Jump;
-        public MoveData(Vector3 _input, float _horizontal, float _vertical, bool _jump)
+        public MoveData(Vector3 _input, float _horizontal, float _vertical, Quaternion _rotation, bool _jump)
         {
             Input = _input;
             Horizontal = _horizontal;
             Vertical = _vertical;
+            Rotation = _rotation;
             Jump = _jump;
         }
     }
     public struct ReconcileData
     {
         public Vector3 Position;
-        public Quaternion Rotation;
         public Vector3 Velocity;
         public Vector3 AngularVelocity;
-        public ReconcileData(Vector3 _position, Quaternion _rotation, Vector3 _velocity, Vector3 _angularVelocity)
+        public ReconcileData(Vector3 _position, Vector3 _velocity, Vector3 _angularVelocity)
         {
             Position = _position;
-            Rotation = _rotation;
             Velocity = _velocity;
             AngularVelocity = _angularVelocity;
         }
@@ -157,7 +157,7 @@ public class SpiderController : NetworkBehaviour
     {
         if (base.IsServer)
         {
-            ReconcileData rd = new ReconcileData(transform.position, transform.rotation, spider.rb.velocity, spider.rb.angularVelocity);
+            ReconcileData rd = new ReconcileData(transform.position, spider.rb.velocity, spider.rb.angularVelocity);
             Reconciliation(rd, true);
         }
     }
@@ -168,7 +168,7 @@ public class SpiderController : NetworkBehaviour
 
         Vector3 input = getInput();
 
-        md = new MoveData(input, moveInput.x, moveInput.y, jumpQueued);
+        md = new MoveData(input, moveInput.x, moveInput.y, transform.rotation, jumpQueued);
         jumpQueued = false;
     }
 
@@ -176,17 +176,19 @@ public class SpiderController : NetworkBehaviour
     private void Move(MoveData md, bool asServer, bool replaying = false)
     {
         //** Movement **//
-        spider.walk(md.Input, moveInput);
+        spider.walk(md.Input, new Vector2(md.Horizontal, md.Vertical));
 
         if (IsOwner)
         {
             Quaternion tempCamTargetRotation = smoothCam.getCamTargetRotation();
             Vector3 tempCamTargetPosition = smoothCam.getCamTargetPosition();
+            spider.turn(md.Input, new Vector2(md.Horizontal, md.Vertical));
             smoothCam.setTargetRotation(tempCamTargetRotation);
             smoothCam.setTargetPosition(tempCamTargetPosition);
         }
 
-        spider.turn(md.Input, moveInput);
+        if (!base.IsOwner)
+            transform.rotation = md.Rotation;
 
         if (md.Jump && spider.IsGrounded())
             spider.RPC_Jump();
@@ -196,7 +198,6 @@ public class SpiderController : NetworkBehaviour
     private void Reconciliation(ReconcileData rd, bool asServer)
     {
         transform.position = rd.Position;
-        transform.rotation = rd.Rotation;
         spider.rb.velocity = rd.Velocity;
         spider.rb.angularVelocity = rd.AngularVelocity;
     }
