@@ -188,8 +188,8 @@ public class SpiderController : NetworkBehaviour
 
         spider.turn(md.Input, moveInput);
 
-        if (md.Jump)
-            spider.Jump();
+        if (md.Jump && spider.IsGrounded())
+            spider.RPC_Jump();
     }
 
     [Reconcile]
@@ -237,7 +237,7 @@ public class SpiderController : NetworkBehaviour
             return;
         }
 
-        spider.Jump();
+        jumpQueued = true;
     }
 
     private void Fall(bool _isFalling)

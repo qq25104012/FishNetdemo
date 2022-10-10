@@ -184,8 +184,6 @@ public class Spider : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!IsServer) return;
-
         //** Ground Check **//
         grdInfo = GroundCheck();
 
@@ -211,6 +209,8 @@ public class Spider : NetworkBehaviour
 
         //Apply the rotation to the spider
         if (Quaternion.Angle(transform.rotation, goalrotation) > Mathf.Epsilon) transform.rotation = goalrotation;
+
+        if (!IsServer) return;
 
         // Dont apply gravity if close enough to ground
         if (grdInfo.distanceToGround > getGravityOffDistance())
@@ -289,7 +289,8 @@ public class Spider : NetworkBehaviour
         return grdInfo.isGrounded;
     }
 
-    public void Jump()
+    [ServerRpc]
+    public void RPC_Jump()
     {
         if (IsGrounded())
         {
