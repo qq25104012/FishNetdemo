@@ -13,5 +13,7 @@ public class SteamID : NetworkBehaviour
         if (!IsServer) return;
 
         Owner.CustomData = SteamClient.SteamId;
+
+        Debug.Log("Custom Data: " + Owner.CustomData);
     }
 }
