@@ -2942,7 +2942,6 @@ GameObject:
   - component: {fileID: 5355473968789170365}
   - component: {fileID: 1688583191561219573}
   - component: {fileID: 4480652453213414205}
-  - component: {fileID: 6996307108147098602}
   m_Layer: 15
   m_Name: SpiderController
   m_TagString: Spider
@@ -3168,6 +3167,7 @@ MonoBehaviour:
   - {fileID: 5355473968789170365}
   - {fileID: 1688583191561219573}
   - {fileID: 4480652453213414205}
+  - {fileID: 0}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField:
   - {fileID: 2285853065202768310}
@@ -3288,21 +3288,6 @@ MonoBehaviour:
   _synchronizeInterval: 0.1
   _clientAuthoritative: 0
   _sendToOwner: 0
---- !u!114 &6996307108147098602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059377557813265921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 702248ea9db7da94ca909c166a9c8458, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 1062214073479057588}
-  _networkObjectCache: {fileID: 0}
 --- !u!1 &2059377557833229412
 GameObject:
   m_ObjectHideFlags: 0

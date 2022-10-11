@@ -10,9 +10,15 @@ public class SteamID : NetworkBehaviour
     {
         base.OnStartClient();
 
-        if (!IsServer) return;
+        if (!IsOwner) return;
 
-        Owner.CustomData = SteamClient.SteamId;
+        RPC_SetSteamID(SteamClient.SteamId);
+    }
+
+    [ServerRpc]
+    public void RPC_SetSteamID(SteamId _steamID)
+    {
+        Owner.CustomData = _steamID;
 
         Debug.Log("Custom Data: " + Owner.CustomData);
     }
