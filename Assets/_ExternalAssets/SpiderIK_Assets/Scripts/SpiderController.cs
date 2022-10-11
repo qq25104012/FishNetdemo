@@ -187,7 +187,7 @@ public class SpiderController : NetworkBehaviour
             smoothCam.setTargetPosition(tempCamTargetPosition);
         }
 
-        if (!base.IsOwner)
+        if (!base.IsOwner && !md.Equals(default(MoveData)))
             transform.rotation = md.Rotation;
 
         if (md.Jump && spider.IsGrounded())
