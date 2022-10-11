@@ -25,6 +25,7 @@ public enum Event_Type
     GAME_ENDED,
 
     UPDATE_SCORE,
+    ADD_SCORE,
 
     CHANGE_SPECTATOR,
 
