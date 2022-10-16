@@ -20,6 +20,8 @@ public class CameraManager : MonoBehaviour
 
     private void PlayerDied()
     {
+        EventSystemNew.RaiseEvent(Event_Type.SPIDER_DESTROY_CAMERA);
+
         spectateCamera.SetActive(true);
     }
 

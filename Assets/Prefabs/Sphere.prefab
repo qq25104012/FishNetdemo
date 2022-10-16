@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8049605492963697709}
   - component: {fileID: 2110008689329837570}
   - component: {fileID: 2170504756705585}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SphereVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1206427575072186663}
   - component: {fileID: 7912244228065999320}
   - component: {fileID: 4532803288136642225}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ Transform:
   m_GameObject: {fileID: 6468403811931857091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8049605492963697709}
@@ -199,7 +199,7 @@ MonoBehaviour:
   _isGlobal: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: -1
+  <PrefabId>k__BackingField: 8
   _scenePathHash: 2571393946
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13442373501952158233
@@ -221,7 +221,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &7912244228065999320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,14 +257,14 @@ HingeJoint:
   m_GameObject: {fileID: 6468403811931857091}
   m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 0
+  m_UseSpring: 1
   m_Spring:
     spring: 0
-    damper: 0
+    damper: 50
     targetPosition: 0
   m_UseMotor: 0
   m_Motor:
@@ -280,7 +280,7 @@ HingeJoint:
     contactDistance: 0
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
-  m_EnableCollision: 0
+  m_EnableCollision: 1
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1

@@ -119,7 +119,7 @@ public class RopeGenerator : NetworkBehaviour
 
     private void Swing(bool _isSwinging)
     {
-        if (_isSwinging && canSwing && spiderScript.IsGrounded())
+        if (_isSwinging && canSwing && !spiderScript.IsGrounded())
         {
             Debug.Log("SWING");
 
@@ -129,6 +129,8 @@ public class RopeGenerator : NetworkBehaviour
         }
         else if (!_isSwinging && endPoint != null)
         {
+            Debug.Log("Stop Swinging");
+
             DestroyRope();
         }
     }
@@ -176,8 +178,10 @@ public class RopeGenerator : NetworkBehaviour
         EventSystemNew<bool>.RaiseEvent(Event_Type.IS_SWINGING, true);
 
         // Create an endpoint to attach the joint to
-        GameObject endPoint = Instantiate(endPointPrefab, newEndPointTransform, Quaternion.identity);
-        Spawn(endPoint);
+        GameObject endPointObject = Instantiate(endPointPrefab, newEndPointTransform, Quaternion.identity);
+        Spawn(endPointObject);
+
+        endPoint = endPointObject;
 
         lerpValue = 0f;
 
