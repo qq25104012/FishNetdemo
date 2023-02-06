@@ -12,14 +12,25 @@ public class SteamID : NetworkBehaviour
 
         if (!IsOwner) return;
 
-        RPC_SetSteamID(SteamClient.SteamId);
+        RPC_SetSteamID(SteamClient.SteamId, SteamClient.Name);
     }
 
     [ServerRpc]
-    public void RPC_SetSteamID(SteamId _steamID)
+    public void RPC_SetSteamID(SteamId _steamID, string _steamName)
     {
-        Owner.CustomData = _steamID;
+        SteamData steamData = new SteamData(_steamID, _steamName);
+        Owner.CustomData = steamData;
+    }
+}
 
-        Debug.Log("Custom Data: " + Owner.CustomData);
+public class SteamData
+{
+    public SteamId steamID;
+    public string steamName;
+
+    public SteamData(SteamId _steamID, string _steamName)
+    {
+        steamID = _steamID;
+        steamName = _steamName;
     }
 }
